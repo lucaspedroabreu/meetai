@@ -75,14 +75,18 @@ export default function Home() {
   };
 
   const handleLogout = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          window.alert("Logout realizado com sucesso!");
-          refetch();
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            window.alert("Logout realizado com sucesso!");
+            refetch();
+          },
         },
-      },
-    });
+      });
+    } catch (err) {
+      window.alert("Erro inesperado no logout");
+    }
   };
 
   if (isPending) {
