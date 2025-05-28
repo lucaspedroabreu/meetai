@@ -103,43 +103,43 @@
   );
   --background-image-gradient-call: linear-gradient(
     to right,
-    theme(colors.green.500),
-    theme(colors.green.600)
+    rgb(var(--tw-color-green-500)),
+    rgb(var(--tw-color-green-600))
   );
   --background-image-gradient-call-hover: linear-gradient(
     to right,
-    theme(colors.green.600),
-    theme(colors.green.700)
+    rgb(var(--tw-color-green-600)),
+    rgb(var(--tw-color-green-700))
   );
   --background-image-gradient-leave: linear-gradient(
     to right,
-    theme(colors.orange.500),
-    theme(colors.red.500)
+    rgb(var(--tw-color-orange-500)),
+    rgb(var(--tw-color-red-500))
   );
   --background-image-gradient-leave-hover: linear-gradient(
     to right,
-    theme(colors.orange.600),
-    theme(colors.red.600)
+    rgb(var(--tw-color-orange-600)),
+    rgb(var(--tw-color-red-600))
   );
   --background-image-gradient-info: linear-gradient(
     to right,
-    theme(colors.blue.500),
-    theme(colors.blue.600)
+    rgb(var(--tw-color-blue-500)),
+    rgb(var(--tw-color-blue-600))
   );
   --background-image-gradient-info-hover: linear-gradient(
     to right,
-    theme(colors.blue.600),
-    theme(colors.blue.700)
+    rgb(var(--tw-color-blue-600)),
+    rgb(var(--tw-color-blue-700))
   );
   --background-image-gradient-warning: linear-gradient(
     to right,
-    theme(colors.yellow.500),
-    theme(colors.amber.500)
+    rgb(var(--tw-color-yellow-500)),
+    rgb(var(--tw-color-amber-500))
   );
   --background-image-gradient-warning-hover: linear-gradient(
     to right,
-    theme(colors.yellow.600),
-    theme(colors.amber.600)
+    rgb(var(--tw-color-yellow-600)),
+    rgb(var(--tw-color-amber-600))
   );
 }
 
