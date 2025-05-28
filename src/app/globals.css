@@ -256,9 +256,41 @@
     @apply outline-2 outline-offset-2 outline-primary/50;
   }
 
-  /* Smooth transitions for theme switching */
-  * {
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+  /* 
+   * Theme transition optimization
+   * 
+   * Instead of applying transitions globally with `* { transition: ... }` which can harm performance
+   * by triggering style recalculations on every element, we use a targeted approach:
+   * 
+   * 1. .theme-transition utility class for manual application
+   * 2. Selective application to key UI components that actually need smooth theme switching
+   * 
+   * This reduces the performance impact while maintaining smooth theme transitions where needed.
+   * 
+   * Usage examples:
+   * - <div className="theme-transition">Content</div>
+   * - <Card className="theme-transition">Card content</Card>
+   * - Custom components that change appearance based on theme
+   * 
+   * Note: Buttons, inputs, and other interactive elements already have their own optimized transitions
+   */
+  .theme-transition {
+    transition: background-color 0.3s ease, border-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  /* Apply theme transitions to key UI components that benefit from smooth theme switching */
+  body,
+  .card,
+  [data-slot="card"],
+  [data-slot="popover"],
+  [data-slot="dialog-content"],
+  [data-slot="sheet-content"],
+  [data-slot="navigation-menu"],
+  [data-slot="sidebar"],
+  [data-slot="sidebar-inner"],
+  .theme-transition {
+    @apply theme-transition;
   }
 
   /* Card hover effects */

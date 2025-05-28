@@ -105,16 +105,14 @@ const variantThemes = {
   icon: {
     hover: "hover:bg-accent hover:text-accent-foreground",
     dark: "dark:hover:bg-accent/30",
-    effects: "rounded-md", // Override base rounded-md for better icon button shape
+    effects: "rounded-full p-2 h-8 w-8", // Override base rounded-md for better icon button shape
   },
 };
 
 // Helper function to combine variant theme classes
-const combineTheme = (
-  theme: (typeof variantThemes)[keyof typeof variantThemes]
-) => {
-  return Object.values(theme).join(" ");
-};
+const resolvedThemes = Object.fromEntries(
+  Object.entries(variantThemes).map(([k, v]) => [k, Object.values(v).join(" ")])
+);
 
 const buttonVariants = cva(
   // Base classes combined
@@ -122,19 +120,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: combineTheme(variantThemes.default),
-        outline: combineTheme(variantThemes.outline),
-        secondary: combineTheme(variantThemes.secondary),
-        ghost: combineTheme(variantThemes.ghost),
-        link: combineTheme(variantThemes.link),
-        call: combineTheme(variantThemes.call),
-        leave: combineTheme(variantThemes.leave),
-        destructive: combineTheme(variantThemes.destructive),
-        calendar: combineTheme(variantThemes.calendar),
-        ai: combineTheme(variantThemes.ai),
-        info: combineTheme(variantThemes.info),
-        warning: combineTheme(variantThemes.warning),
-        icon: combineTheme(variantThemes.icon),
+        default: resolvedThemes.default,
+        outline: resolvedThemes.outline,
+        secondary: resolvedThemes.secondary,
+        ghost: resolvedThemes.ghost,
+        link: resolvedThemes.link,
+        call: resolvedThemes.call,
+        leave: resolvedThemes.leave,
+        destructive: resolvedThemes.destructive,
+        calendar: resolvedThemes.calendar,
+        ai: resolvedThemes.ai,
+        info: resolvedThemes.info,
+        warning: resolvedThemes.warning,
+        icon: resolvedThemes.icon,
       },
       size: {
         default: "h-10 px-4 py-2 has-[>svg]:px-3",

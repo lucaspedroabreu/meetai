@@ -94,11 +94,11 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-10 min-h-screen">
+    <div className="flex flex-col items-center justify-center p-10 min-h-screen theme-transition">
       <h1 className="text-3xl font-bold mb-6">Meet AI!</h1>
 
       {session?.user?.email ? (
-        <div className="text-center">
+        <div className="text-center theme-transition">
           <p className="mb-4">Logado como: {session.user.email}</p>
           <Button onClick={handleLogout} variant="outline">
             Logout
@@ -106,7 +106,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="w-full max-w-md">
-          <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
+          <div className="flex mb-6 bg-gray-100 rounded-lg p-1 theme-transition">
             <Button
               variant={!isLoginMode ? "default" : "ghost"}
               className="flex-1"
