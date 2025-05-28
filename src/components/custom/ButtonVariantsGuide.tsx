@@ -165,7 +165,7 @@ export default function ButtonVariantsGuide() {
       <Card className="border-primary/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <div className="size-4 rounded bg-gradient-to-r from-primary to-primary/80" />
+            <div className="size-4 rounded bg-gradient-to-r from-purple-500 to-purple-600" />
             Calendar Variant
           </CardTitle>
           <CardDescription>
