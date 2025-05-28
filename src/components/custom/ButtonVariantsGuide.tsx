@@ -35,6 +35,11 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+/**
+ * Displays a comprehensive visual guide to semantic button variants for Meeting SaaS applications.
+ *
+ * Presents categorized examples of button styles, icons, and usage contexts for actions such as starting calls, leaving meetings, performing destructive operations, scheduling, invoking AI features, providing information, and issuing warnings. Includes real-world usage scenarios and a quick reference for variant selection.
+ */
 export default function ButtonVariantsGuide() {
   return (
     <div className="container py-10 space-y-8 max-w-6xl">

@@ -5,6 +5,11 @@ import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 
+/**
+ * Renders the main authentication page, allowing users to register, log in, or log out.
+ *
+ * Displays either a registration form, a login form, or the logged-in user's email and a logout button, depending on session state. Handles user input, form submission, and authentication actions using the authentication client.
+ */
 export default function Home() {
   const { data: session, error, isPending, refetch } = authClient.useSession();
 
