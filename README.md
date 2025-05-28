@@ -205,4 +205,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Built with ❤️ by the MeetAI team
+Built with ❤️ by Lucas Pedro Abreu
