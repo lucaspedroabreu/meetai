@@ -12,7 +12,13 @@ export default async function WelcomePage() {
 
   // Se erro na autenticação, redireciona para sign-in (comportamento seguro para página protegida)
   if (error || !isValid || !session?.user) {
-    console.error("🚨 Erro de sessão na página Welcome:", error?.message);
+    const errorMessage = error?.message || "Sessão inválida ou expirada";
+    console.log("ℹ️ Estado da sessão na página Welcome:", {
+      hasError: !!error,
+      isValid,
+      hasUser: !!session?.user,
+      message: errorMessage,
+    });
     redirect("/sign-in");
   }
 

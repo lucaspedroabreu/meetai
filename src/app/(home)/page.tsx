@@ -10,7 +10,13 @@ export default async function Home() {
 
   // Se erro, registra no log mas continua com graceful fallback
   if (error || !isValid || !session?.user) {
-    console.error("🚨 Erro de sessão na página Home:", error?.message);
+    const errorMessage = error?.message || "Sessão inválida ou expirada";
+    console.log("ℹ️ Estado da sessão na página Home:", {
+      hasError: !!error,
+      isValid,
+      hasUser: !!session?.user,
+      message: errorMessage,
+    });
   }
 
   // Server-side check: se sessão válida, mostra dashboard

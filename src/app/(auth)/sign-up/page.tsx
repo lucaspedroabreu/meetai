@@ -11,7 +11,13 @@ export default async function SignUpPage() {
 
   // Se erro na autenticação, registra mas permite acesso (usuário pode tentar cadastro)
   if (error || !isValid || !session?.user) {
-    console.error("🚨 Erro de sessão na página Sign-up:", error?.message);
+    const errorMessage = error?.message || "Sessão inválida ou expirada";
+    console.log("ℹ️ Estado da sessão na página Sign-up:", {
+      hasError: !!error,
+      isValid,
+      hasUser: !!session?.user,
+      message: errorMessage,
+    });
   }
 
   // Validação robusta de sessão - se já estiver logado, redireciona
