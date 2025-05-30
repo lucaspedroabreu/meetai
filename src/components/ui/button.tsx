@@ -10,8 +10,7 @@ const baseClasses = {
   typography: "text-sm font-medium",
   shape: "rounded-md",
   transitions: "transition-all duration-200",
-  focus:
-    "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+  focus: "outline-none focus-gradient",
   states:
     "disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
   validation:

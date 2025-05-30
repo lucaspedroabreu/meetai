@@ -1,208 +1,218 @@
-# MeetAI - AI-Powered Meeting Platform
+# MeetAI - IA Avançada em Videoconferência
 
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/lucaspedroabreu/meetai?utm_source=oss&utm_medium=github&utm_campaign=lucaspedroabreu%2Fmeetai&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?logo=tailwind-css)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/Version-0.1.0--alpha-blue.svg)](https://github.com/lucaspedroabreu/meetai)
 
-MeetAI is a next-generation video conferencing platform that integrates AI assistants directly into your meetings. Schedule calls with customizable AI personas and receive comprehensive meeting artifacts including summaries, transcripts, and actionable insights.
+**Plataforma de videoconferência de próxima geração com IA integrada.** Transcrições inteligentes, resumos automáticos e análises em tempo real powered by OpenAI.
 
-## ✨ Key Features
+## 🧪 Status do Projeto
 
-### 🤖 Core Meeting Experience
+- **Fase**: Alpha em desenvolvimento ativo
+- **Estabilidade**: Versão inicial - mudanças frequentes
+- **Suporte**: Limitado / Via GitHub Issues
+- **Custos**: Serviço pago devido aos custos operacionais de IA
+- **Licença**: MIT (código aberto)
 
-- **AI-powered video calls** - Real-time AI assistants participate in your meetings
-- **Custom real-time agents** - Configure AI personas tailored to your meeting needs
-- **Stream Video SDK** - Enterprise-grade video infrastructure
-- **Stream Chat SDK** - Integrated chat functionality during meetings
+> 🎯 **Para Desenvolvedores**: Este projeto está em fase alpha. Consulte a seção [Desenvolvimento](#-desenvolvimento) para limitações técnicas e expectativas.
 
-### 📝 Meeting Intelligence
+## 🚀 Recursos Principais
 
-- **Summaries, transcripts, recordings** - Automatic documentation of every meeting
-- **Meeting history & statuses** - Track all your past and upcoming meetings
-- **Transcript search** - Find any conversation across all your meetings
-- **Video playback** - Review recordings with synchronized transcripts
-- **AI meeting Q&A** - Ask questions about past meetings and get instant answers
+### 🤖 Inteligência Artificial Integrada ⚡ Recursos em Alpha
 
-### 🛠 Technical Stack
+- **Transcrição em tempo real** - Powered by OpenAI Whisper
+- **Resumos automáticos** - Sínteses inteligentes de reuniões
+- **Análise de sentimentos** - Insights sobre dinâmicas de comunicação
+- **Assistentes virtuais** - IA conversacional durante reuniões
+- **Busca inteligente** - Encontre qualquer tópico em histórico de reuniões
 
-- **OpenAI integration** - Powers the AI assistants and meeting intelligence
-- **Polar subscriptions** - Seamless payment processing
-- **Better Auth login** - Secure authentication system
-- **Mobile responsive** - Full functionality on all devices
-- **Next.js 15 + React 19** - Latest framework features
-- **Tailwind v4 + Shadcn/ui** - Modern, accessible UI components
-- **Inngest background jobs** - Reliable async processing
-- **CodeRabbit PR reviews** - Automated code quality checks
+### 🎥 Videoconferência Avançada
 
-### 💾 Backend Infrastructure
+- **WebRTC moderno** - Comunicação de vídeo de alta qualidade
+- **Chat integrado** - Mensagens sincronizadas com transcrições
+- **Gravação inteligente** - Captura com marcadores de IA
+- **Interface responsiva** - Experiência otimizada para todos dispositivos
+- **Compartilhamento de tela** - Com anotações inteligentes
 
-- **TanStack Query** - Powerful data synchronization
-- **Drizzle ORM** - Type-safe database queries
-- **NeonDB** - Serverless PostgreSQL
-- **tRPC** - End-to-end typesafe APIs
-- **Polar** - Payment processing and subscription management
+### 📊 Analytics e Insights
 
-## 🚀 Getting Started
+- **Métricas de reunião** - Tempo de fala, participação, engajamento
+- **Relatórios automáticos** - Dashboards com insights acionáveis
+- **Histórico searchável** - Busca semântica em todas as reuniões
+- **Exportação inteligente** - Formatos otimizados para diferentes usos
 
-### Prerequisites
+## 💻 Stack Tecnológico
+
+- **Frontend**: Next.js 15 + React 19 + TypeScript
+- **UI/UX**: Tailwind CSS v4 + Shadcn/ui + Framer Motion
+- **Backend**: Drizzle ORM + NeonDB (PostgreSQL)
+- **IA**: OpenAI APIs (Whisper, GPT-4, Embeddings)
+- **Auth**: Better Auth com suporte a OAuth
+- **Real-time**: WebRTC + WebSocket para comunicação
+
+## 🚀 Instalação Rápida
+
+### Pré-requisitos
 
 - Node.js 20+
-- npm 10+
-- PostgreSQL database (or NeonDB account)
-- Stream account for video/chat
-- OpenAI API key
-- Polar account for payments
+- Conta OpenAI com API key
+- Banco PostgreSQL (recomendado: NeonDB)
 
-### Installation
-
-1. Clone the repository:
+### Setup
 
 ```bash
+# Clone o repositório
 git clone https://github.com/lucaspedroabreu/meetai.git
 cd meetai
-```
 
-2. Install dependencies:
-
-```bash
+# Instale dependências
 npm install
-```
 
-3. Set up environment variables:
-
-```bash
+# Configure variáveis de ambiente
 cp .env.example .env.local
-```
 
-4. Configure your environment variables:
-
-```env
-# Database
-DATABASE_URL="postgresql://..."
-
-# Stream
-NEXT_PUBLIC_STREAM_API_KEY="..."
-STREAM_SECRET="..."
-
-# OpenAI
-OPENAI_API_KEY="..."
-
-# Auth
-BETTER_AUTH_SECRET="..."
-BETTER_AUTH_URL="http://localhost:3000"
-
-# Polar
-POLAR_API_KEY="..."
-NEXT_PUBLIC_POLAR_ORGANIZATION_ID="..."
-
-# Inngest
-INNGEST_SIGNING_KEY="..."
-INNGEST_EVENT_KEY="..."
-```
-
-5. Run database migrations:
-
-```bash
-npm run db:generate
+# Execute migrações do banco
 npm run db:migrate
-```
 
-6. Start the development server:
-
-```bash
+# Inicie o servidor de desenvolvimento
 npm run dev
 ```
 
-## 📁 Project Structure
+### Variáveis de Ambiente
 
-```
-meetai/
-├── app/                    # Next.js 15 app directory
-│   ├── (auth)/            # Authentication pages
-│   ├── (dashboard)/       # Main application
-│   ├── api/              # API routes
-│   └── meeting/[id]/     # Meeting room
-├── components/            # React components
-│   ├── ui/               # Shadcn/ui components
-│   ├── meeting/          # Meeting-specific components
-│   └── ai/               # AI assistant components
-├── lib/                   # Utility functions
-│   ├── db/               # Database schema & queries
-│   ├── ai/               # AI integration
-│   └── stream/           # Stream SDK setup
-├── hooks/                 # Custom React hooks
-├── server/               # Server-side code
-│   ├── api/              # tRPC routers
-│   └── inngest/          # Background jobs
-└── styles/               # Global styles
+```env
+# Banco de dados
+DATABASE_URL="postgresql://..."
+
+# OpenAI (obrigatório)
+OPENAI_API_KEY="sk-..."
+
+# Autenticação
+BETTER_AUTH_SECRET="..."
+BETTER_AUTH_URL="http://localhost:3000"
+
+# Opcional: Provedores OAuth
+GOOGLE_CLIENT_ID="..."
+GOOGLE_CLIENT_SECRET="..."
 ```
 
-## 🎨 Design System
+## 🔧 Desenvolvimento
 
-MeetAI uses a custom theme built on Tailwind CSS v4 with Shadcn/ui components. The design system includes:
-
-### Button Variants
-
-- `call` - Green gradient for starting/joining calls
-- `leave` - Orange-to-red gradient for exiting meetings
-- `calendar` - Purple gradient for scheduling actions
-- `ai` - Translucent gradient for AI features
-- `destructive` - Solid red for permanent deletions
-- `info` - Blue for informational actions
-- `warning` - Yellow-amber for alerts
-
-### Theme Colors
-
-- **Primary**: Modern purple for innovation
-- **Accent**: Teal for energy and approachability
-- **Background**: Subtle gradients for depth
-- **Dark Mode**: Full dark mode support
-
-## 🔧 Development
-
-### Commands
+### Comandos Disponíveis
 
 ```bash
-# Development
-npm run dev          # Start dev server with Turbopack
-npm run build        # Build for production
-npm run start        # Start production server
-
-# Database
-npm run db:generate  # Generate migrations
-npm run db:migrate   # Generate and apply migrations
-npm run db:pull      # Pull schema from database
-npm run db:studio    # Open Drizzle Studio
-
-# Linting
-npm run lint         # Run ESLint
+npm run dev          # Servidor de desenvolvimento
+npm run build        # Build de produção
+npm run start        # Servidor de produção
+npm run db:studio    # Interface visual do banco
+npm run db:generate  # Gerar migrações
+npm run lint         # Verificação de código
 ```
 
-### Code Quality
+### Estrutura do Projeto
 
-- **TypeScript** - Full type safety across the stack
-- **ESLint** - Consistent code style
-- **Prettier** - Code formatting
-- **CodeRabbit** - Automated PR reviews
+```
+src/
+├── app/                # Next.js App Router
+│   ├── (auth)/        # Páginas de autenticação
+│   ├── (dashboard)/   # Dashboard principal
+│   ├── meeting/       # Salas de reunião
+│   └── api/           # API routes
+├── components/         # Componentes React
+│   ├── ui/            # Componentes base (Shadcn)
+│   ├── meeting/       # Componentes de reunião
+│   └── ai/            # Componentes de IA
+├── lib/               # Utilitários e configurações
+└── hooks/             # Hooks customizados
+```
 
-## 📄 License
+### 🧪 Status de Desenvolvimento (Alpha)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+**⚠️ Importante para Desenvolvedores:**
 
-## 🙏 Acknowledgments
+- **Estabilidade**: Alpha - mudanças frequentes esperadas
+- **APIs**: Podem ser alteradas sem aviso prévio
+- **Testes**: Cobertura limitada, contribuições bem-vindas
+- **Documentação**: Em desenvolvimento ativo
+- **Suporte**: Via GitHub Issues apenas
 
-- [Stream](https://getstream.io) for video/chat infrastructure
-- [OpenAI](https://openai.com) for AI capabilities
-- [Vercel](https://vercel.com) for hosting
-- [Shadcn](https://ui.shadcn.com) for UI components
-- [Polar](https://polar.sh) for payment processing
+### Limitações Conhecidas
 
-## 📞 Support
+- Sem SLA de uptime ou performance
+- Recursos experimentais podem ser removidos
+- Integração com APIs externas (OpenAI) pode ter instabilidades
+- Escalabilidade não testada para alto volume
 
-- **Documentation**: [docs.meetai.com](https://docs.meetai.com) //TODO
+## 💰 Modelo de Negócio
+
+### Transparência de Custos
+
+- **70%** - APIs OpenAI (Whisper, GPT-4, Embeddings)
+- **20%** - Infraestrutura cloud (hosting, CDN, banco)
+- **10%** - Desenvolvimento e manutenção
+
+### Política de Cobrança
+
+- ✅ Baseada em uso real de recursos
+- ✅ Sem taxas fixas mensais
+- ✅ Créditos gratuitos para novos usuários
+- ✅ Transparência total de custos
+- ✅ Política de reembolso flexível
+
+## 📄 Licenciamento
+
+### Open Source (MIT)
+
+```
+MIT License - Uso comercial, modificação e distribuição permitidos
+```
+
+### Dependências Importantes
+
+- **OpenAI APIs** - Sujeitas aos termos da OpenAI
+- **NeonDB** - Banco de dados serverless
+- **Vercel** - Hosting e deployment
+
+## 🤝 Contribuições
+
+Contribuições são muito bem-vindas!
+
+**Para contribuir:**
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+**Áreas que precisam de ajuda:**
+
+- Testes automatizados
+- Documentação
+- Otimizações de performance
+- Novos recursos de IA
+- Melhorias de UX/UI
+
+## 📞 Suporte
+
+- **GitHub Issues**: [Reportar bugs ou solicitar features](https://github.com/lucaspedroabreu/meetai/issues)
+- **Discussions**: [Ideias e feedback geral](https://github.com/lucaspedroabreu/meetai/discussions)
+- **Email**: Apenas para questões críticas de segurança
+
+## 🙏 Agradecimentos
+
+- [OpenAI](https://openai.com) - APIs de IA de última geração
+- [Vercel](https://vercel.com) - Plataforma de deployment
+- [NeonDB](https://neon.tech) - Banco PostgreSQL serverless
+- [Shadcn/ui](https://ui.shadcn.com) - Componentes React elegantes
+- Comunidade open source
 
 ---
 
-Built with ❤️ by Lucas Pedro Abreu
+**🛠️ Desenvolvido com ❤️ por [Lucas Pedro Abreu](https://github.com/lucaspedroabreu)**
+
+📄 **Nota Legal**: Consulte os [Termos de Serviço](./src/app/terms/page.tsx) e [Política de Privacidade](./src/app/privacy/page.tsx) para informações completas sobre limitações e responsabilidades.

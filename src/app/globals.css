@@ -78,6 +78,11 @@
     transparent
   );
 
+  /* Focus gradient colors - teal to blue */
+  --color-focus-from: #14b8a6; /* teal-500 */
+  --color-focus-via: #0ea5e9; /* sky-500 */
+  --color-focus-to: #3b82f6; /* blue-500 */
+
   /* Background image utilities - Register as proper Tailwind utilities */
   --background-image-gradient-calendar: linear-gradient(
     to right,
@@ -103,43 +108,43 @@
   );
   --background-image-gradient-call: linear-gradient(
     to right,
-    rgb(var(--tw-color-green-500)),
-    rgb(var(--tw-color-green-600))
+    theme(colors.green.500),
+    theme(colors.green.600)
   );
   --background-image-gradient-call-hover: linear-gradient(
     to right,
-    rgb(var(--tw-color-green-600)),
-    rgb(var(--tw-color-green-700))
+    theme(colors.green.600),
+    theme(colors.green.700)
   );
   --background-image-gradient-leave: linear-gradient(
     to right,
-    rgb(var(--tw-color-orange-500)),
-    rgb(var(--tw-color-red-500))
+    theme(colors.orange.500),
+    theme(colors.red.500)
   );
   --background-image-gradient-leave-hover: linear-gradient(
     to right,
-    rgb(var(--tw-color-orange-600)),
-    rgb(var(--tw-color-red-600))
+    theme(colors.orange.600),
+    theme(colors.red.600)
   );
   --background-image-gradient-info: linear-gradient(
     to right,
-    rgb(var(--tw-color-blue-500)),
-    rgb(var(--tw-color-blue-600))
+    theme(colors.blue.500),
+    theme(colors.blue.600)
   );
   --background-image-gradient-info-hover: linear-gradient(
     to right,
-    rgb(var(--tw-color-blue-600)),
-    rgb(var(--tw-color-blue-700))
+    theme(colors.blue.600),
+    theme(colors.blue.700)
   );
   --background-image-gradient-warning: linear-gradient(
     to right,
-    rgb(var(--tw-color-yellow-500)),
-    rgb(var(--tw-color-amber-500))
+    theme(colors.yellow.500),
+    theme(colors.amber.500)
   );
   --background-image-gradient-warning-hover: linear-gradient(
     to right,
-    rgb(var(--tw-color-yellow-600)),
-    rgb(var(--tw-color-amber-600))
+    theme(colors.yellow.600),
+    theme(colors.amber.600)
   );
 }
 
@@ -210,6 +215,11 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Focus gradient colors for dark mode */
+  --color-focus-from: #5eead4; /* teal-300 */
+  --color-focus-via: #38bdf8; /* sky-400 */
+  --color-focus-to: #60a5fa; /* blue-400 */
 }
 
 @layer base {
@@ -251,9 +261,55 @@
     @apply bg-primary/20 text-primary-foreground;
   }
 
-  /* Focus visible improvements */
+  /* Focus visible improvements with gradient ring */
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary/50;
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-focus-from),
+      0 0 0 4px var(--color-focus-via),
+      0 0 12px 2px color-mix(in srgb, var(--color-focus-to) 30%, transparent);
+    animation: focus-glow 2s ease-in-out infinite;
+    transition: box-shadow 0.2s ease;
+  }
+
+  /* Foco mais suave para inputs e elementos de formulário */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    box-shadow: 0 0 0 1px var(--color-focus-from),
+      0 0 0 3px color-mix(in srgb, var(--color-focus-via) 50%, transparent),
+      0 0 8px color-mix(in srgb, var(--color-focus-to) 25%, transparent);
+  }
+
+  /* Seletores específicos para componentes UI que podem ter especificidade alta */
+  button:focus-visible,
+  [data-slot="button"]:focus-visible,
+  [data-slot="select-trigger"]:focus-visible,
+  [data-slot="checkbox"]:focus-visible,
+  [data-slot="radio-group-item"]:focus-visible,
+  [data-slot="switch"]:focus-visible,
+  [data-slot="toggle"]:focus-visible,
+  [role="button"]:focus-visible {
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--color-focus-from),
+      0 0 0 4px var(--color-focus-via),
+      0 0 12px 2px color-mix(in srgb, var(--color-focus-to) 30%, transparent) !important;
+    animation: focus-glow 2s ease-in-out infinite;
+    transition: box-shadow 0.2s ease;
+  }
+
+  /* Animação de brilho suave para o foco */
+  @keyframes focus-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 2px var(--color-focus-from),
+        0 0 0 4px var(--color-focus-via),
+        0 0 12px 2px color-mix(in srgb, var(--color-focus-to) 20%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 0 2px var(--color-focus-from),
+        0 0 0 4px var(--color-focus-via),
+        0 0 16px 4px color-mix(in srgb, var(--color-focus-to) 40%, transparent);
+    }
   }
 
   /* 
@@ -288,14 +344,24 @@
   [data-slot="sheet-content"],
   [data-slot="navigation-menu"],
   [data-slot="sidebar"],
-  [data-slot="sidebar-inner"],
-  .theme-transition {
-    @apply theme-transition;
+  [data-slot="sidebar-inner"] {
+    transition: background-color 0.3s ease, border-color 0.3s ease,
+      color 0.3s ease;
   }
 
   /* Card hover effects */
   .card-hover {
     @apply transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5;
+  }
+
+  /* Focus utility class - pode ser aplicada manualmente se necessário */
+  .focus-gradient:focus-visible {
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--color-focus-from),
+      0 0 0 4px var(--color-focus-via),
+      0 0 12px 2px color-mix(in srgb, var(--color-focus-to) 30%, transparent) !important;
+    animation: focus-glow 2s ease-in-out infinite !important;
+    transition: box-shadow 0.2s ease !important;
   }
 
   /* Meeting-specific utilities */
@@ -326,4 +392,175 @@
     content: "";
     @apply absolute inset-0 rounded-full bg-red-500;
   }
+}
+
+/* Animações de onda para o TEXTO - apenas opacidade */
+@keyframes text-wave-outer {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.05;
+  }
+  40% {
+    opacity: 0.1;
+  }
+  60% {
+    opacity: 0.05;
+  }
+  80% {
+    opacity: 0.02;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes text-wave-middle {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  75% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes text-wave-inner {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  60% {
+    opacity: 0.4;
+  }
+  90% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes text-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Classes específicas para as ondas do texto */
+.animate-text-wave-outer {
+  animation: text-wave-outer 2.4s ease-in-out infinite;
+}
+
+.animate-text-wave-middle {
+  animation: text-wave-middle 2s ease-in-out infinite 0.3s;
+}
+
+.animate-text-wave-inner {
+  animation: text-wave-inner 1.6s ease-in-out infinite 0.6s;
+}
+
+.animate-text-glow {
+  animation: text-glow 1.4s ease-in-out infinite 0.9s;
+}
+
+/* Animações de onda para simular blur propagante no LOGO - apenas opacidade */
+@keyframes wave-outer {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.05;
+  }
+  40% {
+    opacity: 0.1;
+  }
+  60% {
+    opacity: 0.05;
+  }
+  80% {
+    opacity: 0.02;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes wave-middle {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  75% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes wave-inner {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  60% {
+    opacity: 0.4;
+  }
+  90% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Animação complementar para o núcleo do LOGO */
+@keyframes logo-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Classes específicas para as ondas do logo */
+.animate-wave-outer {
+  animation: wave-outer 2.4s ease-in-out infinite;
+}
+
+.animate-wave-middle {
+  animation: wave-middle 2s ease-in-out infinite 0.3s;
+}
+
+.animate-wave-inner {
+  animation: wave-inner 1.6s ease-in-out infinite 0.6s;
+}
+
+.animate-logo-glow {
+  animation: logo-glow 1.4s ease-in-out infinite 0.9s;
 }
