@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MeetAILogo } from "@/components/custom/Logo";
 import { SuccessIcon } from "@/components/custom/icons";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
 
 interface WelcomeScreenProps {
   userEmail: string;

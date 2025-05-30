@@ -80,8 +80,6 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
   return (
     <style
-      /* eslint-disable react/no-danger */
-      // esllint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
           .map(
@@ -100,7 +98,6 @@ ${colorConfig
           )
           .join("\n"),
       }}
-      /* eslint-enable react/no-danger */
     />
   );
 };

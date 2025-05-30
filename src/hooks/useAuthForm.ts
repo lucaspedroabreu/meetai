@@ -4,9 +4,11 @@ import {
   type UseFormReturn,
   type FieldValues,
   type Path,
+  type ControllerRenderProps,
+  type DefaultValues,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type z } from "zod";
+import { type z, type ZodObject } from "zod";
 
 /**
  * Hook para formulários de autenticação com feedback visual em tempo real
@@ -67,11 +69,14 @@ interface UseAuthFormReturn<T extends FieldValues> {
   /** Transição: normal → focado (azul + limpa erros) */
   handleFocus: (fieldName: keyof T) => void;
   /** Transição: focado → validado/erro (verde/vermelho + marca como tocado) */
-  handleBlur: (fieldName: keyof T, field: any) => Promise<void>;
+  handleBlur: (
+    fieldName: keyof T,
+    field: ControllerRenderProps<T>
+  ) => Promise<void>;
   /** Transição: em tempo real para campos tocados (atualiza validFields) */
   handleChange: (
     fieldName: keyof T,
-    field: any,
+    field: ControllerRenderProps<T>,
     value: string
   ) => Promise<void>;
 
@@ -211,9 +216,9 @@ export function useAuthForm<T extends FieldValues>({
     mode: "onBlur",
     reValidateMode: "onBlur",
     shouldFocusError: true,
-    // TypeScript requires 'as any' for react-hook-form compatibility
+    // TypeScript requires type assertion for react-hook-form compatibility
     // but we know defaultValues is Record<keyof T, string> (all empty strings)
-    defaultValues: defaultValues as any,
+    defaultValues: defaultValues as DefaultValues<T>,
   });
 
   /**
@@ -295,7 +300,7 @@ export function useAuthForm<T extends FieldValues>({
 
   // FASE 2: Saída do campo (momento da avaliação visual: verde para sucesso, vermelho para erro)
   const handleBlur = useCallback(
-    async (fieldName: keyof T, field: any) => {
+    async (fieldName: keyof T, field: ControllerRenderProps<T>) => {
       setFocusedFields((prev) => ({ ...prev, [fieldName]: false }));
       setTouchedFields((prev) => ({ ...prev, [fieldName]: true }));
       field.onBlur();
@@ -308,7 +313,11 @@ export function useAuthForm<T extends FieldValues>({
 
   // FASE 3: Digitação em tempo real (valida sempre, mas só mostra erro se já tocado)
   const handleChange = useCallback(
-    async (fieldName: keyof T, field: any, value: string) => {
+    async (
+      fieldName: keyof T,
+      field: ControllerRenderProps<T>,
+      value: string
+    ) => {
       field.onChange(value);
 
       // Sempre tenta validar para feedback positivo, independente de touched
@@ -325,9 +334,11 @@ export function useAuthForm<T extends FieldValues>({
           const isValid = value.length > 0 && value === referenceValue;
           setValidFields((prev) => ({ ...prev, [fieldName]: isValid }));
         } else {
-          // Validação padrão usando schema Zod
+          // Validação padrão usando schema Zod - campo específico para feedback instantâneo
           const schemaToUse = baseSchema || schema;
-          const fieldSchema = (schemaToUse as any).shape[fieldName];
+          const fieldSchema = (schemaToUse as ZodObject<T>).shape[
+            fieldName as string
+          ];
           await fieldSchema.parseAsync(value);
           setValidFields((prev) => ({ ...prev, [fieldName]: true }));
         }
@@ -406,19 +417,19 @@ export function useAuthForm<T extends FieldValues>({
   // Funções para controlar erro de submit:
   /** Marca todos os campos como erro temporariamente (chamada quando submit falha) */
   const setSubmitError = useCallback(() => {
-    setSubmitErrorFields((prev) =>
+    setSubmitErrorFields((_prev) =>
       fields.reduce(
         (acc, field) => ({ ...acc, [field]: true }),
         {} as Record<keyof T, boolean>
       )
     );
-    setTouchedFields((prev) =>
+    setTouchedFields((_prev) =>
       fields.reduce(
         (acc, field) => ({ ...acc, [field]: true }),
         {} as Record<keyof T, boolean>
       )
     );
-    setValidFields((prev) =>
+    setValidFields((_prev) =>
       fields.reduce(
         (acc, field) => ({ ...acc, [field]: false }),
         {} as Record<keyof T, boolean>
@@ -428,7 +439,7 @@ export function useAuthForm<T extends FieldValues>({
 
   /** Limpa o erro de submit de todos os campos */
   const clearSubmitError = useCallback(() => {
-    setSubmitErrorFields((prev) =>
+    setSubmitErrorFields((_prev) =>
       fields.reduce(
         (acc, field) => ({ ...acc, [field]: false }),
         {} as Record<keyof T, boolean>

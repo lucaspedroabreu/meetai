@@ -1,5 +1,4 @@
-import { auth } from "@/lib/auth";
-import { WelcomeScreen } from "@/components/screens";
+import WelcomeScreen from "@/components/screens/WelcomeScreen";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAndValidateSession } from "@/lib/session";

@@ -21,8 +21,6 @@ const MAIN_PATH =
   // triângulo vazado do A
   "M12.5 14 H14.5 L13.5 11.5 Z";
 
-const TRIANGLE_PATH = "M12.5 14 H14.5 L13.5 11.5 Z"; // se precisar isolar
-
 /* ---------- COMPONENTES ------------------------------------------------ */
 export const MeetAILogo: React.FC<LogoProps> = ({
   size = 32,
@@ -351,7 +349,7 @@ export const LogoShowcase = () => {
             <h3 className="font-medium mb-3">Design System</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>• Baseado em grid 22×22 para máxima legibilidade</p>
-              <p>• Ponto laranja distintivo para o "i"</p>
+              <p>• Ponto laranja distintivo para o &quot;i&quot;</p>
               <p>• Três variantes: default, gradient e mono</p>
               <p>• Escalável de 16px a 128px+</p>
             </div>

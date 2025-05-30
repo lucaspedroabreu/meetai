@@ -128,7 +128,7 @@ export default function SignUpScreen() {
                   router.push("/welcome");
                 }, 2000);
               }
-            } catch (loginError) {
+            } catch (_loginError) {
               // Se falhar o login automático, redireciona para sign-in
               setSuccess(true);
               form.reset();
@@ -147,7 +147,7 @@ export default function SignUpScreen() {
           },
         }
       );
-    } catch (err) {
+    } catch (_signUpError) {
       // Erro local já em português, não precisa traduzir
       setError("Erro inesperado ao criar conta");
       setSubmitError(); // Marca todos os campos como erro temporariamente

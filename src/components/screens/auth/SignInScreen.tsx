@@ -96,7 +96,7 @@ export default function SignInScreen() {
       } else {
         router.push("/");
       }
-    } catch (err) {
+    } catch (_authError) {
       // Erro local já em português, não precisa traduzir
       setError("Erro inesperado no login");
       setSubmitError(); // Marca todos os campos como erro temporariamente

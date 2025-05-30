@@ -75,7 +75,8 @@ export default function ButtonVariantsGuide() {
           <Alert>
             <AlertDescription>
               Use for any action that <strong>starts or joins</strong> a
-              communication session. Green universally signals "go" or "start".
+              communication session. Green universally signals &quot;go&quot; or
+              &quot;start&quot;.
             </AlertDescription>
           </Alert>
         </CardContent>

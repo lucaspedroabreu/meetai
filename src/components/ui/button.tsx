@@ -138,6 +138,7 @@ const buttonVariants = cva(
         sm: "h-8 rounded-md gap-1.5 px-3 text-xs has-[>svg]:px-2.5",
         lg: "h-12 rounded-lg px-6 text-base has-[>svg]:px-4",
         xl: "h-14 rounded-lg px-8 text-lg has-[>svg]:px-6",
+        icon: "h-8 w-8 p-2",
       },
       glow: {
         true: "shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 dark:shadow-primary/10 dark:hover:shadow-primary/20",

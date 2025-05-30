@@ -1,4 +1,3 @@
-import MeetAILogo, { MeetAIWordmark } from "@/components/custom/Logo";
 import AnimatedMeetAiText from "@/components/custom/AnimatedMeetAiText";
 
 export default function AuthLayout({
