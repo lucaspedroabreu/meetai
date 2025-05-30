@@ -23,8 +23,12 @@ export function PWAInstallBanner() {
 
   const handleDismiss = () => {
     setIsVisible(false);
-    // Armazenar preferência para não mostrar novamente (por sessão)
-    sessionStorage.setItem("pwa-banner-dismissed", "true");
+    // Safely store dismissal preference
+    try {
+      sessionStorage.setItem("pwa-banner-dismissed", "true");
+    } catch (error) {
+      console.warn("Could not save banner dismissal state:", error);
+    }
   };
 
   return (
