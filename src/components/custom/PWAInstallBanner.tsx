@@ -15,16 +15,28 @@ export function PWAInstallBanner() {
   }
 
   const handleInstall = async () => {
-    const success = await installApp();
-    if (success) {
-      setIsVisible(false);
+    try {
+      const success = await installApp();
+      if (success) {
+        setIsVisible(false);
+      } else {
+        // Show user-friendly error message
+        console.warn("Installation was cancelled or failed");
+      }
+    } catch (error) {
+      console.error("Failed to install PWA:", error);
+      // Consider showing a toast notification to the user
     }
   };
 
   const handleDismiss = () => {
     setIsVisible(false);
-    // Armazenar preferência para não mostrar novamente (por sessão)
-    sessionStorage.setItem("pwa-banner-dismissed", "true");
+    // Safely store dismissal preference
+    try {
+      sessionStorage.setItem("pwa-banner-dismissed", "true");
+    } catch (error) {
+      console.warn("Could not save banner dismissal state:", error);
+    }
   };
 
   return (

@@ -136,9 +136,10 @@ export function translateError(errorMessage: string): string {
   const trimmedMessage = errorMessage.trim();
 
   // 1. Busca tradução exata primeiro O(1) - hash lookup
-  const exactMatch = ERROR_TRANSLATIONS[trimmedMessage];
+- const exactMatch = ERROR_TRANSLATIONS[trimmedMessage];
++ const exactMatch = ERROR_TRANSLATIONS[trimmedMessage] ??
++                    ERROR_TRANSLATIONS[trimmedMessage.toLowerCase()];
   if (exactMatch) return exactMatch;
-
   // 2. Busca com score de similaridade O(n × (k + m))
   const bestMatch = findBestMatch(trimmedMessage);
   if (bestMatch) return bestMatch;

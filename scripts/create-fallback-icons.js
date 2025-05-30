@@ -22,8 +22,13 @@ for (const size of sizes) {
   const svgContent = baseSVG.replace("SIZE", size).replace("SIZE", size);
   const svgPath = path.join(publicDir, `icon-${size}.svg`);
 
-  fs.writeFileSync(svgPath, svgContent);
-  console.log(`✅ Criado: icon-${size}.svg`);
+  try {
+    fs.writeFileSync(svgPath, svgContent);
+    console.log(`✅ Created: icon-${size}.svg`);
+  } catch (error) {
+    console.error(`❌ Failed to create icon-${size}.svg:`, error.message);
+    process.exit(1);
+  }
 }
 
 console.log("\n🎉 Ícones SVG criados com sucesso!");
