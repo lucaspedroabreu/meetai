@@ -1,9 +1,9 @@
-import { LandingPage, DashboardScreen } from "@/components/screens";
-import { headers } from "next/headers";
 import { getAndValidateSession } from "@/lib/session";
+import { headers } from "next/headers";
+import DashboardScreen from "@/components/screens/DashboardScreen";
+import { LandingPage } from "@/components/screens";
 
-export default async function Home() {
-  // Obtenção e validação robusta de sessão centralizada
+export default async function HomePage() {
   const { session, isValid, error } = await getAndValidateSession(
     await headers()
   );
@@ -17,21 +17,19 @@ export default async function Home() {
       hasUser: !!session?.user,
       message: errorMessage,
     });
-  }
 
-  // Server-side check: se sessão válida, mostra dashboard
-  if (isValid && session?.user) {
+    // Caso sessão inválida, mostra landing page
     return (
       <div className="animate-in fade-in duration-300">
-        <DashboardScreen userEmail={session.user.email} />
+        <LandingPage />
       </div>
     );
   }
 
-  // Caso contrário (sessão inválida ou erro), mostra landing page
+  // Server-side check: se sessão válida, mostra dashboard
   return (
     <div className="animate-in fade-in duration-300">
-      <LandingPage />
+      <DashboardScreen userEmail={session.user.email} />
     </div>
   );
 }

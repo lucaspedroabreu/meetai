@@ -2,91 +2,113 @@
 
 import { Button } from "@/components/ui/button";
 import { MeetAILogo } from "@/components/custom/Logo";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 interface DashboardScreenProps {
   userEmail: string;
 }
 
-// Componente client interno para funcionalidade de logout
-function LogoutButton() {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await authClient.signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.refresh(); // Refresh da página para atualizar o server component
-          },
-        },
-      });
-    } catch (err) {
-      console.error("Erro inesperado no logout:", err);
-    }
-  };
-
-  return (
-    <Button
-      onClick={handleLogout}
-      variant="outline"
-      size="lg"
-      className="h-12 px-7 bg-background/50 backdrop-blur-sm hover:bg-background/80"
-    >
-      Fazer Logout
-    </Button>
-  );
-}
-
 export default function DashboardScreen({ userEmail }: DashboardScreenProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-secondary/10 via-secondary/5 to-transparent rounded-full blur-3xl" />
-      </div>
+    <DashboardLayout userEmail={userEmail}>
+      <div className="p-6 lg:p-10">
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Welcome Section */}
+          <div className="text-center space-y-6">
+            <div className="flex justify-center">
+              <MeetAILogo size={80} variant="gradient" animated />
+            </div>
 
-      <div className="relative flex flex-col items-center justify-center p-6 lg:p-10 min-h-screen">
-        <div className="text-center space-y-10 max-w-4xl">
-          {/* Hero Section */}
-          <div className="space-y-7">
-            <div className="flex justify-center relative">
-              <MeetAILogo size={130} variant="gradient" />
+            <div className="space-y-4">
+              <h1 className="text-3xl lg:text-4xl font-bold">
+                Bem-vindo de volta! 👋
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Gerencie suas reuniões e colaborações com IA
+              </p>
             </div>
           </div>
 
-          {/* Logged in state */}
-          <div className="space-y-6">
-            <div className="relative p-7 bg-gradient-to-br from-card via-card to-card/80 border border-border/50 rounded-2xl shadow-lg backdrop-blur-sm">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 rounded-2xl" />
-              <div className="relative space-y-5">
-                <div className="space-y-2">
-                  <h2 className="text-2xl lg:text-3xl font-bold">
-                    Bem-vindo de volta! 👋
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Logado como:{" "}
-                    <span className="font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md">
-                      {userEmail}
-                    </span>
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="relative p-6 bg-gradient-to-br from-card via-card to-card/80 border border-border/50 rounded-2xl shadow-lg backdrop-blur-sm group hover:shadow-xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-blue-600/5 rounded-2xl" />
+              <div className="relative space-y-4">
+                <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">🚀</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Nova Reunião</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Inicie uma reunião com IA assistente
                   </p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <LogoutButton />
-                  <Button
-                    size="lg"
-                    className="h-12 px-7 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-lg"
-                  >
-                    🚀 Explorar IA
-                  </Button>
+                <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                  Iniciar Agora
+                </Button>
+              </div>
+            </div>
+
+            <div className="relative p-6 bg-gradient-to-br from-card via-card to-card/80 border border-border/50 rounded-2xl shadow-lg backdrop-blur-sm group hover:shadow-xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-green-600/5 rounded-2xl" />
+              <div className="relative space-y-4">
+                <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">📊</span>
                 </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Relatórios</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Analise o desempenho das suas reuniões
+                  </p>
+                </div>
+                <Button variant="outline" className="w-full">
+                  Ver Relatórios
+                </Button>
+              </div>
+            </div>
+
+            <div className="relative p-6 bg-gradient-to-br from-card via-card to-card/80 border border-border/50 rounded-2xl shadow-lg backdrop-blur-sm group hover:shadow-xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-purple-600/5 rounded-2xl" />
+              <div className="relative space-y-4">
+                <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">⚙️</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Configurações</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Personalize sua experiência
+                  </p>
+                </div>
+                <Button variant="outline" className="w-full">
+                  Configurar
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center p-6 bg-gradient-to-br from-background via-background to-muted/10 border rounded-xl">
+              <div className="text-3xl font-bold text-blue-500">12</div>
+              <div className="text-sm text-muted-foreground">
+                Reuniões este mês
+              </div>
+            </div>
+            <div className="text-center p-6 bg-gradient-to-br from-background via-background to-muted/10 border rounded-xl">
+              <div className="text-3xl font-bold text-green-500">4.8</div>
+              <div className="text-sm text-muted-foreground">
+                Avaliação média
+              </div>
+            </div>
+            <div className="text-center p-6 bg-gradient-to-br from-background via-background to-muted/10 border rounded-xl">
+              <div className="text-3xl font-bold text-purple-500">156</div>
+              <div className="text-sm text-muted-foreground">
+                Horas economizadas
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
