@@ -11,6 +11,14 @@ import { db } from "@/db"; // your drizzle instance
 
 import * as schema from "@/db/schema";
 
+const baseURL = process.env.BETTER_AUTH_URL || "https://www.meetai.com.br";
+
+// Debug log para verificar qual URL está sendo usada
+if (process.env.NODE_ENV === "development") {
+  console.log("🔧 Better Auth baseURL:", baseURL);
+  console.log("🌍 BETTER_AUTH_URL env:", process.env.BETTER_AUTH_URL);
+}
+
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg", // or "mysql", "sqlite"
@@ -18,7 +26,7 @@ export const auth = betterAuth({
       ...schema,
     },
   }),
-  baseURL: process.env.BETTER_AUTH_URL || "https://www.meetai.com.br",
+  baseURL,
   emailAndPassword: {
     enabled: true,
   },
