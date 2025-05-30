@@ -6,7 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?logo=tailwind-css)](https://tailwindcss.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.0.0--alpha-blue.svg)](https://github.com/lucaspedroabreu/meetai)
+[![Version](https://img.shields.io/badge/Version-0.1.0--alpha-blue.svg)](https://github.com/lucaspedroabreu/meetai)
 
 **Plataforma de videoconferência de próxima geração com IA integrada.** Transcrições inteligentes, resumos automáticos e análises em tempo real powered by OpenAI.
 

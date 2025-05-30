@@ -2,15 +2,17 @@ import { auth } from "@/lib/auth";
 import { WelcomeScreen } from "@/components/screens";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getAndValidateSession } from "@/lib/session";
 
 export default async function WelcomePage() {
-  // Autenticação server-side obrigatória para welcome
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  // Obtenção e validação robusta de sessão centralizada
+  const { session, isValid, error } = await getAndValidateSession(
+    await headers()
+  );
 
-  // Se não logado, redireciona para sign-in
-  if (!session?.user?.email) {
+  // Se erro na autenticação, redireciona para sign-in (comportamento seguro para página protegida)
+  if (error || !isValid || !session?.user) {
+    console.error("🚨 Erro de sessão na página Welcome:", error?.message);
     redirect("/sign-in");
   }
 

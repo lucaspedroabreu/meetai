@@ -76,6 +76,8 @@ export default function SignUpScreen() {
     baseSchema: baseSignUpSchema,
     fields: ["name", "email", "password", "confirmPassword"],
     mode: "sign-up",
+    confirmField: "confirmPassword",
+    referenceField: "password",
   });
 
   const onSubmit = async (data: SignUpFormData) => {

@@ -41,6 +41,10 @@ interface UseAuthFormOptions<T extends FieldValues> {
   fields: (keyof T)[]; // Array of field names from T, e.g., ["email", "password"]
   /** Modo do formulário - afeta estilos e comportamento de validação */
   mode?: "sign-in" | "sign-up";
+  /** Campo de confirmação genérico (ex: confirmPassword, confirmEmail) - elimina hard-coding */
+  confirmField?: keyof T;
+  /** Campo de referência para confirmação (ex: password para confirmPassword) */
+  referenceField?: keyof T;
 }
 
 /**
@@ -141,6 +145,8 @@ export function useAuthForm<T extends FieldValues>({
   baseSchema,
   fields, // e.g., ["email", "password"]
   mode = "sign-in",
+  confirmField,
+  referenceField,
 }: UseAuthFormOptions<T>): UseAuthFormReturn<T> {
   /**
    * Função auxiliar para criar objetos de estado inicial
@@ -216,13 +222,21 @@ export function useAuthForm<T extends FieldValues>({
    * Por que useCallback: Performance - evita recriação desnecessária
    *
    * Retorna objeto com todas as informações necessárias para decisões de estilo/comportamento
+   *
+   * PERFORMANCE OPTIMIZATION:
+   * - Usa form.getValues() em vez de form.watch() para evitar subscriptions desnecessárias
+   * - form.watch() cria uma subscription a cada chamada, causando re-renders excessivos
+   * - form.getValues() fornece snapshot atual sem subscription
+   * - Re-renders são acionados pelas mudanças de estado (focusedFields, touchedFields, validFields)
+   * - Isso mantém a reatividade necessária sem overhead de subscriptions múltiplas
    */
   const getFieldInfo = useCallback(
     (fieldName: keyof T) => {
       const fieldState = form.getFieldState(fieldName as Path<T>);
       const isFocused = focusedFields[fieldName];
       const hasBeenTouched = fieldState.isTouched || touchedFields[fieldName];
-      const value = form.watch(fieldName as Path<T>);
+      // Usa getValues() para snapshot em vez de watch() que cria subscription
+      const value = form.getValues(fieldName as Path<T>);
       const hasValue = !!value;
       const hasError = !!fieldState.error;
       const hasSubmitError = submitErrorFields[fieldName];
@@ -299,11 +313,19 @@ export function useAuthForm<T extends FieldValues>({
 
       // Sempre tenta validar para feedback positivo, independente de touched
       try {
-        if (fieldName === "confirmPassword" && mode === "sign-up") {
-          const password = form.getValues("password" as Path<T>);
-          const isValid = value.length > 0 && value === password;
+        // ✅ Validação genérica para campo de confirmação (ex: confirmPassword, confirmEmail)
+        if (
+          confirmField &&
+          referenceField &&
+          fieldName === confirmField &&
+          mode === "sign-up"
+        ) {
+          // Validação específica para confirmação - totalmente genérica
+          const referenceValue = form.getValues(referenceField as Path<T>);
+          const isValid = value.length > 0 && value === referenceValue;
           setValidFields((prev) => ({ ...prev, [fieldName]: isValid }));
         } else {
+          // Validação padrão usando schema Zod
           const schemaToUse = baseSchema || schema;
           const fieldSchema = (schemaToUse as any).shape[fieldName];
           await fieldSchema.parseAsync(value);
@@ -313,7 +335,7 @@ export function useAuthForm<T extends FieldValues>({
         setValidFields((prev) => ({ ...prev, [fieldName]: false }));
       }
     },
-    [form, schema, baseSchema, mode]
+    [form, schema, baseSchema, mode, confirmField, referenceField]
   );
 
   // Traduz estados em classes CSS para inputs (hierarquia: focado > válido > erro > normal)

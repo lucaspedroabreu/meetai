@@ -1,9 +1,26 @@
 // MeetAI Service Worker
-// Versão 1.0.0
+// Versão 0.1.0-alpha - Atualização de Segurança
+//
+// IMPORTANTE: Esta versão inclui melhorias de segurança para prevenir
+// o cache de dados sensíveis de autenticação, incluindo:
+// - JWTs e tokens de acesso
+// - Cookies de sessão
+// - Informações pessoais identificáveis (PII)
+// - Respostas de endpoints de autenticação
+//
+// As estratégias de cache agora verificam:
+// - Métodos HTTP não-idempotentes
+// - Headers de autorização
+// - Credenciais incluídas
+// - Endpoints sensíveis (/auth/, /login/, /token/, etc.)
+// - Headers Cache-Control restritivos
+//
+// CORREÇÃO: Adicionada verificação de método GET antes de cachear
+// para prevenir erros com requisições POST, PUT, DELETE, etc.
 
-const CACHE_NAME = "meetai-v1.0.0";
-const STATIC_CACHE = "meetai-static-v1.0.0";
-const DYNAMIC_CACHE = "meetai-dynamic-v1.0.0";
+const CACHE_NAME = "meetai-v0.1.0-alpha";
+const STATIC_CACHE = "meetai-static-v0.1.0-alpha";
+const DYNAMIC_CACHE = "meetai-dynamic-v0.1.0-alpha";
 
 // Arquivos essenciais para cache inicial
 const STATIC_ASSETS = [
@@ -25,12 +42,123 @@ const CACHE_STRATEGIES = {
     /\/icon-\d+\.(png|svg)$/,
   ],
 
-  // Network First - para dados dinâmicos
-  networkFirst: [/\/api\//, /\/auth\//],
+  // Network First - para dados dinâmicos (excluindo endpoints sensíveis de auth)
+  networkFirst: [/\/api\//],
 
   // Stale While Revalidate - para páginas
   staleWhileRevalidate: [/\//, /\/sign-/, /\/dashboard/],
 };
+
+// Endpoints sensíveis que nunca devem ser cacheados
+const SENSITIVE_ENDPOINTS = [
+  /\/auth\//, // endpoints de autenticação
+  /\/login/, // endpoints de login
+  /\/logout/, // endpoints de logout
+  /\/token/, // endpoints de token
+  /\/session/, // endpoints de sessão
+  /\/user\/profile/, // perfil do usuário (pode conter PII)
+];
+
+// Verificar se uma requisição contém dados sensíveis
+function isSensitiveRequest(request, url) {
+  // Verificar se é um endpoint sensível
+  if (SENSITIVE_ENDPOINTS.some((pattern) => pattern.test(url))) {
+    return true;
+  }
+
+  // Verificar se a requisição contém credenciais
+  if (request.credentials === "include") {
+    return true;
+  }
+
+  // Verificar headers de autorização
+  const authHeader = request.headers.get("authorization");
+  if (
+    authHeader &&
+    (authHeader.toLowerCase().includes("bearer") ||
+      authHeader.toLowerCase().includes("token"))
+  ) {
+    return true;
+  }
+
+  // Verificar métodos não-idempotentes
+  if (!["GET", "HEAD", "OPTIONS"].includes(request.method.toUpperCase())) {
+    return true;
+  }
+
+  return false;
+}
+
+// Verificar se uma resposta contém dados sensíveis
+function isSensitiveResponse(response, request) {
+  // Verificar headers que indicam dados sensíveis
+  const setCookieHeader = response.headers.get("set-cookie");
+  if (setCookieHeader) {
+    return true;
+  }
+
+  // Verificar headers de autenticação na resposta
+  const authHeader =
+    response.headers.get("authorization") ||
+    response.headers.get("www-authenticate");
+  if (authHeader) {
+    return true;
+  }
+
+  // Para requisições de autenticação específicas, assumir que JSON é sensível
+  if (
+    request &&
+    SENSITIVE_ENDPOINTS.some((pattern) => pattern.test(request.url))
+  ) {
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return true;
+    }
+  }
+
+  // Verificar headers de cache control que impedem cache
+  const cacheControl = response.headers.get("cache-control");
+  if (
+    cacheControl &&
+    (cacheControl.includes("no-store") || cacheControl.includes("private"))
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+// Verificar se uma requisição pode ser cacheada
+function canCacheRequest(request, response) {
+  // Apenas requisições GET podem ser cacheadas
+  if (request.method !== "GET") {
+    console.log(
+      `🚫 Cache bloqueado: Método ${request.method} não suportado para ${request.url}`
+    );
+    return false;
+  }
+
+  // Verificar se a resposta foi bem-sucedida
+  if (!response || response.status !== 200) {
+    console.log(
+      `🚫 Cache bloqueado: Status ${response?.status || "indefinido"} para ${
+        request.url
+      }`
+    );
+    return false;
+  }
+
+  // Verificar se não contém dados sensíveis
+  if (isSensitiveResponse(response, request)) {
+    console.log(
+      `🔒 Cache bloqueado: Dados sensíveis detectados para ${request.url}`
+    );
+    return false;
+  }
+
+  console.log(`✅ Cache permitido: ${request.method} ${request.url}`);
+  return true;
+}
 
 // Instalar Service Worker
 self.addEventListener("install", (event) => {
@@ -92,13 +220,18 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Determinar estratégia de cache
-  const strategy = getStrategy(request.url);
+  const strategy = getStrategy(url, request);
 
   event.respondWith(handleRequest(request, strategy));
 });
 
 // Determinar estratégia baseada na URL
-function getStrategy(url) {
+function getStrategy(url, request) {
+  // Verificar se é uma requisição sensível
+  if (isSensitiveRequest(request, url)) {
+    return "noCache"; // Nova estratégia para dados sensíveis
+  }
+
   for (const [strategy, patterns] of Object.entries(CACHE_STRATEGIES)) {
     if (patterns.some((pattern) => pattern.test(url))) {
       return strategy;
@@ -117,6 +250,8 @@ async function handleRequest(request, strategy) {
         return await networkFirst(request);
       case "staleWhileRevalidate":
         return await staleWhileRevalidate(request);
+      case "noCache":
+        return await noCache(request);
       default:
         return await fetch(request);
     }
@@ -124,6 +259,12 @@ async function handleRequest(request, strategy) {
     console.error("❌ Service Worker: Erro ao processar requisição:", error);
     return await getOfflinePage(request);
   }
+}
+
+// No Cache Strategy - para dados sensíveis
+async function noCache(request) {
+  // Sempre buscar da rede, nunca cachear
+  return await fetch(request);
 }
 
 // Cache First Strategy
@@ -134,7 +275,7 @@ async function cacheFirst(request) {
   }
 
   const response = await fetch(request);
-  if (response.status === 200) {
+  if (canCacheRequest(request, response)) {
     const cache = await caches.open(STATIC_CACHE);
     cache.put(request, response.clone());
   }
@@ -145,7 +286,7 @@ async function cacheFirst(request) {
 async function networkFirst(request) {
   try {
     const response = await fetch(request);
-    if (response.status === 200) {
+    if (canCacheRequest(request, response)) {
       const cache = await caches.open(DYNAMIC_CACHE);
       cache.put(request, response.clone());
     }
@@ -166,7 +307,7 @@ async function staleWhileRevalidate(request) {
 
   const fetchPromise = fetch(request)
     .then((response) => {
-      if (response.status === 200) {
+      if (canCacheRequest(request, response)) {
         cache.put(request, response.clone());
       }
       return response;

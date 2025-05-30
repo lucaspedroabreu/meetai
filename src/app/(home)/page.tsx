@@ -1,15 +1,20 @@
-import { auth } from "@/lib/auth";
 import { LandingPage, DashboardScreen } from "@/components/screens";
 import { headers } from "next/headers";
+import { getAndValidateSession } from "@/lib/session";
 
 export default async function Home() {
-  // Autenticação server-side - muito mais segura!
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  // Obtenção e validação robusta de sessão centralizada
+  const { session, isValid, error } = await getAndValidateSession(
+    await headers()
+  );
 
-  // Server-side check: se há usuário autenticado, mostra dashboard
-  if (session?.user?.email) {
+  // Se erro, registra no log mas continua com graceful fallback
+  if (error || !isValid || !session?.user) {
+    console.error("🚨 Erro de sessão na página Home:", error?.message);
+  }
+
+  // Server-side check: se sessão válida, mostra dashboard
+  if (isValid && session?.user) {
     return (
       <div className="animate-in fade-in duration-300">
         <DashboardScreen userEmail={session.user.email} />
@@ -17,7 +22,7 @@ export default async function Home() {
     );
   }
 
-  // Caso contrário, mostra landing page
+  // Caso contrário (sessão inválida ou erro), mostra landing page
   return (
     <div className="animate-in fade-in duration-300">
       <LandingPage />
