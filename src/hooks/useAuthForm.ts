@@ -107,7 +107,7 @@ type FormDefaultValues<T extends FieldValues> = Record<keyof T, string>;
  */
 const FIELD_STYLES = {
   success:
-    "border-teal-500 bg-gradient-to-r from-teal-500 to-blue-500 text-white font-bold placeholder:text-white/70 focus:border-teal-500 focus:ring-teal-500/20",
+    "border-purple-500 bg-brand-gradient text-white font-bold placeholder:text-white/70 focus:border-purple-500 focus:ring-purple-500/20",
   error: "border-red-500 focus:border-red-500 focus:ring-red-500/20 bg-white",
   normal: "border-gray-300 focus:border-primary focus:ring-primary/20 bg-white",
 } as const;
@@ -119,12 +119,12 @@ const FIELD_STYLES = {
  */
 const LABEL_STYLES = {
   signUp: {
-    successFocused: "text-teal-600 font-bold",
-    successBlurred: "text-teal-600",
+    successFocused: "text-brand-primary font-bold",
+    successBlurred: "text-brand-primary",
   },
   signIn: {
-    successFocused: "text-teal-600 font-bold",
-    successBlurred: "text-teal-600 font-semibold",
+    successFocused: "text-brand-primary font-bold",
+    successBlurred: "text-brand-primary font-semibold",
   },
   error: "text-red-600 font-semibold",
   normal: "text-gray-700",
