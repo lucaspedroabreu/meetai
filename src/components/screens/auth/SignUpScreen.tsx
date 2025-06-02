@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
@@ -158,39 +157,37 @@ export default function SignUpScreen() {
 
   if (success) {
     return (
-      <Card className="shadow-2xl border border-gray-200 bg-white">
-        <CardContent className="text-center py-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mx-auto mb-4">
-            <SuccessIcon size={32} />
-          </div>
-          <h2 className="text-xl font-semibold mb-2 text-gray-900">
-            Conta criada com sucesso!
-          </h2>
-          <p className="text-gray-600 mb-4 max-w-sm mx-auto text-sm">
-            Bem-vindo ao MeetAI! Fazendo login automaticamente e preparando sua
-            experiência...
-          </p>
-          <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
-            <LoadingSpinner
-              size={16}
-              className="border-gray-300 border-t-primary"
-            />
-            <span>Preparando sua conta...</span>
-          </div>
-          <Button
-            onClick={() => router.push("/welcome")}
-            variant="outline"
-            className="h-10 px-6 bg-white"
-          >
-            Continuar para Welcome
-          </Button>
-        </CardContent>
-      </Card>
+      <CardContent className="text-center py-8">
+        <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mx-auto mb-4">
+          <SuccessIcon size={32} />
+        </div>
+        <h2 className="text-xl font-semibold mb-2 text-gray-900">
+          Conta criada com sucesso!
+        </h2>
+        <p className="text-gray-600 mb-4 max-w-sm mx-auto text-sm">
+          Bem-vindo ao MeetAI! Fazendo login automaticamente e preparando sua
+          experiência...
+        </p>
+        <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
+          <LoadingSpinner
+            size={16}
+            className="border-gray-300 border-t-purple-600"
+          />
+          <span>Preparando sua conta...</span>
+        </div>
+        <Button
+          onClick={() => router.push("/welcome")}
+          variant="outline"
+          className="h-10 px-6 bg-white hover-purple"
+        >
+          Continuar para Welcome
+        </Button>
+      </CardContent>
     );
   }
 
   return (
-    <Card className="shadow-2xl border border-gray-200 bg-white">
+    <>
       <CardHeader className="text-center pb-3">
         <div className="flex justify-center mb-3">
           <MeetAILogo animated size={40} variant="default" />
@@ -388,7 +385,7 @@ export default function SignUpScreen() {
               variant="default"
               size="lg"
               disabled={isAuthenticating}
-              className={`w-full h-10 transition-all duration-200 ${
+              className={`w-full h-10 transition-all duration-200 bg-brand-gradient hover:bg-brand-gradient-hover ${
                 !areAllFieldsValid() && !isAuthenticating
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300"
                   : ""
@@ -406,10 +403,10 @@ export default function SignUpScreen() {
 
             {/* Erro geral do formulário - compactado */}
             {error && (
-              <div className="bg-red-100 border border-red-300 rounded-md p-2 flex items-start gap-2">
-                <ErrorIcon size={16} className="mt-0.5" />
+              <div className="error-message border rounded-md p-2 flex items-start gap-2">
+                <ErrorIcon size={16} className="mt-0.5 text-error-icon" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-red-700 font-medium">{error}</p>
+                  <p className="text-xs font-medium">{error}</p>
                 </div>
               </div>
             )}
@@ -422,7 +419,7 @@ export default function SignUpScreen() {
             Já tem uma conta?{" "}
             <Link
               href="/sign-in"
-              className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+              className="text-brand-primary hover:text-brand-secondary font-medium transition-colors"
             >
               Fazer login
             </Link>
@@ -446,7 +443,7 @@ export default function SignUpScreen() {
           <Button
             variant="outline"
             disabled={isAuthenticating}
-            className="h-9 border-gray-300 hover:bg-gray-50 transition-colors bg-white text-sm"
+            className="h-9 border-gray-300 hover-purple transition-colors bg-white text-sm"
             onClick={() => {
               authClient.signIn.social({
                 provider: "google",
@@ -461,7 +458,7 @@ export default function SignUpScreen() {
           <Button
             variant="outline"
             disabled={isAuthenticating}
-            className="h-9 border-gray-300 hover:bg-gray-50 transition-colors bg-white text-sm"
+            className="h-9 border-gray-300 hover-purple transition-colors bg-white text-sm"
             onClick={() => {
               authClient.signIn.social({
                 provider: "github",
@@ -477,13 +474,24 @@ export default function SignUpScreen() {
 
         {/* Termos compactados */}
         <div className="text-center pt-2">
-          <p className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 leading-tight">
+          <p className="text-muted-foreground text-center text-xs text-balance leading-tight">
             Ao criar uma conta, você concorda com nossos{" "}
-            <Link href="/terms">Termos de Serviço</Link> e{" "}
-            <Link href="/privacy">Política de Privacidade</Link>
+            <Link
+              href="/terms"
+              className="text-brand-primary hover:text-brand-secondary underline underline-offset-4"
+            >
+              Termos de Serviço
+            </Link>{" "}
+            e{" "}
+            <Link
+              href="/privacy"
+              className="text-brand-primary hover:text-brand-secondary underline underline-offset-4"
+            >
+              Política de Privacidade
+            </Link>
           </p>
         </div>
       </CardContent>
-    </Card>
+    </>
   );
 }

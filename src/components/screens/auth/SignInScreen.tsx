@@ -7,11 +7,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
 } from "@/components/ui/card";
 import {
   Form,
@@ -106,7 +105,7 @@ export default function SignInScreen() {
   };
 
   return (
-    <Card className="shadow-2xl border border-gray-200 bg-white">
+    <>
       <CardHeader className="text-center pb-4">
         <div className="flex justify-center mb-4">
           <MeetAILogo animated size={48} variant="default" />
@@ -200,7 +199,7 @@ export default function SignInScreen() {
                       </div>
                       <Link
                         href="#"
-                        className="text-xs text-teal-700 hover:text-teal-600 transition-colors ml-auto"
+                        className="text-xs text-brand-primary hover:text-brand-secondary transition-colors ml-auto"
                         tabIndex={4}
                       >
                         Esqueceu a senha?
@@ -217,7 +216,7 @@ export default function SignInScreen() {
                 variant="default"
                 size="lg"
                 disabled={isAuthenticating}
-                className={`w-full transition-all duration-200 ${
+                className={`w-full transition-all duration-200 bg-brand-gradient hover:bg-brand-gradient-hover ${
                   !areAllFieldsValid() && !isAuthenticating
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300"
                     : ""
@@ -237,10 +236,10 @@ export default function SignInScreen() {
 
             {/* Erro geral do formulário */}
             {error && (
-              <div className="bg-red-100 border border-red-300 rounded-md p-3 flex items-start gap-2">
-                <ErrorIcon size={16} className="mt-0.5" />
+              <div className="error-message border rounded-md p-3 flex items-start gap-2">
+                <ErrorIcon size={16} className="mt-0.5 text-error-icon" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-red-700 font-medium">{error}</p>
+                  <p className="text-sm font-medium">{error}</p>
                 </div>
               </div>
             )}
@@ -252,7 +251,7 @@ export default function SignInScreen() {
             Não tem uma conta?{" "}
             <Link
               href="/sign-up"
-              className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+              className="text-brand-primary hover:text-brand-secondary font-medium transition-colors"
             >
               Criar conta gratuita
             </Link>
@@ -274,7 +273,7 @@ export default function SignInScreen() {
           <Button
             variant="outline"
             disabled={isAuthenticating}
-            className="h-11 border-gray-300 hover:bg-gray-50 transition-colors bg-white"
+            className="h-11 border-gray-300 hover-purple transition-colors bg-white"
             onClick={() => {
               authClient.signIn.social({
                 provider: "google",
@@ -289,7 +288,7 @@ export default function SignInScreen() {
           <Button
             variant="outline"
             disabled={isAuthenticating}
-            className="h-11 border-gray-300 hover:bg-gray-50 transition-colors bg-white"
+            className="h-11 border-gray-300 hover-purple transition-colors bg-white"
             onClick={() => {
               authClient.signIn.social({
                 provider: "github",
@@ -304,13 +303,24 @@ export default function SignInScreen() {
         </div>
 
         <div className="text-center pt-4 border-t border-gray-100">
-          <p className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+          <p className="text-muted-foreground text-center text-xs text-balance">
             Ao continuar, você concorda com nossos{" "}
-            <Link href="/terms">Termos de Serviço</Link> e{" "}
-            <Link href="/privacy">Política de Privacidade</Link>
+            <Link
+              href="/terms"
+              className="text-brand-primary hover:text-brand-secondary underline underline-offset-4"
+            >
+              Termos de Serviço
+            </Link>{" "}
+            e{" "}
+            <Link
+              href="/privacy"
+              className="text-brand-primary hover:text-brand-secondary underline underline-offset-4"
+            >
+              Política de Privacidade
+            </Link>
           </p>
         </div>
       </CardContent>
-    </Card>
+    </>
   );
 }
