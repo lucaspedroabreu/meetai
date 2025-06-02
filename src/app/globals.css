@@ -42,6 +42,12 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  /* Safe area spacing for mobile devices */
+  --spacing-safe-top: env(safe-area-inset-top, 0px);
+  --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --spacing-safe-left: env(safe-area-inset-left, 0px);
+  --spacing-safe-right: env(safe-area-inset-right, 0px);
+
   /* Calendar colors - Register as proper Tailwind colors */
   --color-calendar-from: oklch(0.737 0.127 284.18);
   --color-calendar-to: oklch(0.677 0.137 284.18);
@@ -78,10 +84,68 @@
     transparent
   );
 
-  /* Focus gradient colors - teal to blue */
-  --color-focus-from: #14b8a6; /* teal-500 */
-  --color-focus-via: #0ea5e9; /* sky-500 */
-  --color-focus-to: #3b82f6; /* blue-500 */
+  /* Focus gradient colors - Updated to purple/violet theme */
+  --color-focus-from: #9333ea; /* purple-600 */
+  --color-focus-via: #7c3aed; /* violet-600 */
+  --color-focus-to: #6366f1; /* indigo-500 */
+
+  /* Purple/Violet Design System Variables */
+  --color-brand-primary: #9333ea; /* purple-600 */
+  --color-brand-secondary: #7c3aed; /* violet-600 */
+  --color-brand-tertiary: #6366f1; /* indigo-500 */
+
+  /* Purple gradient combinations */
+  --gradient-brand-primary: linear-gradient(
+    to right,
+    var(--color-brand-primary),
+    var(--color-brand-secondary)
+  );
+  --gradient-brand-primary-hover: linear-gradient(
+    to right,
+    #7e22ce,
+    #6d28d9
+  ); /* purple-700, violet-700 */
+  --gradient-brand-auth-bg: linear-gradient(
+    to bottom right,
+    #581c87,
+    #5b21b6,
+    #4338ca
+  ); /* purple-900, violet-800, indigo-900 */
+
+  /* Glass morphism effects */
+  --glass-background: rgba(255, 255, 255, 0.95);
+  --glass-background-dark: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-backdrop-blur: blur(12px);
+
+  /* State colors - Error, Success, Warning */
+  --color-error-bg: #fef2f2; /* red-50 */
+  --color-error-border: #fecaca; /* red-200 */
+  --color-error-text: #b91c1c; /* red-700 */
+  --color-error-icon: #ef4444; /* red-500 */
+
+  --color-success-bg: #f0fdf4; /* green-50 */
+  --color-success-border: #bbf7d0; /* green-200 */
+  --color-success-text: #15803d; /* green-700 */
+  --color-success-icon: #22c55e; /* green-500 */
+
+  --color-warning-bg: #fefce8; /* yellow-50 */
+  --color-warning-border: #fde047; /* yellow-300 */
+  --color-warning-text: #a16207; /* yellow-700 */
+  --color-warning-icon: #eab308; /* yellow-500 */
+
+  /* Hover states for purple theme */
+  --color-purple-hover-bg: #faf5ff; /* purple-50 */
+  --color-purple-hover-border: #d8b4fe; /* purple-300 */
+  --color-violet-hover-bg: #f5f3ff; /* violet-50 */
+  --color-violet-hover-border: #c4b5fd; /* violet-300 */
+
+  /* Shadow effects */
+  --shadow-brand: 0 10px 15px -3px rgba(147, 51, 234, 0.1),
+    0 4px 6px -2px rgba(147, 51, 234, 0.05);
+  --shadow-glass: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-auth-card: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Background image utilities - Register as proper Tailwind utilities */
   --background-image-gradient-calendar: linear-gradient(
@@ -181,6 +245,133 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Focus gradient colors - Updated to purple/violet theme */
+  --color-focus-from: #9333ea; /* purple-600 */
+  --color-focus-via: #7c3aed; /* violet-600 */
+  --color-focus-to: #6366f1; /* indigo-500 */
+
+  /* Purple/Violet Design System Variables */
+  --color-brand-primary: #9333ea; /* purple-600 */
+  --color-brand-secondary: #7c3aed; /* violet-600 */
+  --color-brand-tertiary: #6366f1; /* indigo-500 */
+
+  /* Purple gradient combinations */
+  --gradient-brand-primary: linear-gradient(
+    to right,
+    var(--color-brand-primary),
+    var(--color-brand-secondary)
+  );
+  --gradient-brand-primary-hover: linear-gradient(
+    to right,
+    #7e22ce,
+    #6d28d9
+  ); /* purple-700, violet-700 */
+  --gradient-brand-auth-bg: linear-gradient(
+    to bottom right,
+    #581c87,
+    #5b21b6,
+    #4338ca
+  ); /* purple-900, violet-800, indigo-900 */
+
+  /* Glass morphism effects */
+  --glass-background: rgba(255, 255, 255, 0.95);
+  --glass-background-dark: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-backdrop-blur: blur(12px);
+
+  /* State colors - Error, Success, Warning */
+  --color-error-bg: #fef2f2; /* red-50 */
+  --color-error-border: #fecaca; /* red-200 */
+  --color-error-text: #b91c1c; /* red-700 */
+  --color-error-icon: #ef4444; /* red-500 */
+
+  --color-success-bg: #f0fdf4; /* green-50 */
+  --color-success-border: #bbf7d0; /* green-200 */
+  --color-success-text: #15803d; /* green-700 */
+  --color-success-icon: #22c55e; /* green-500 */
+
+  --color-warning-bg: #fefce8; /* yellow-50 */
+  --color-warning-border: #fde047; /* yellow-300 */
+  --color-warning-text: #a16207; /* yellow-700 */
+  --color-warning-icon: #eab308; /* yellow-500 */
+
+  /* Hover states for purple theme */
+  --color-purple-hover-bg: #faf5ff; /* purple-50 */
+  --color-purple-hover-border: #d8b4fe; /* purple-300 */
+  --color-violet-hover-bg: #f5f3ff; /* violet-50 */
+  --color-violet-hover-border: #c4b5fd; /* violet-300 */
+
+  /* Shadow effects */
+  --shadow-brand: 0 10px 15px -3px rgba(147, 51, 234, 0.1),
+    0 4px 6px -2px rgba(147, 51, 234, 0.05);
+  --shadow-glass: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-auth-card: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Background image utilities - Register as proper Tailwind utilities */
+  --background-image-gradient-calendar: linear-gradient(
+    to right,
+    var(--color-calendar-from),
+    var(--color-calendar-to)
+  );
+  --background-image-gradient-calendar-hover: linear-gradient(
+    to right,
+    var(--color-calendar-hover-from),
+    var(--color-calendar-hover-to)
+  );
+  --background-image-gradient-ai: linear-gradient(
+    to bottom right,
+    var(--color-ai-from),
+    var(--color-ai-via),
+    var(--color-ai-to)
+  );
+  --background-image-gradient-ai-hover: linear-gradient(
+    to bottom right,
+    var(--color-ai-hover-from),
+    var(--color-ai-hover-via),
+    var(--color-ai-hover-to)
+  );
+  --background-image-gradient-call: linear-gradient(
+    to right,
+    theme(colors.green.500),
+    theme(colors.green.600)
+  );
+  --background-image-gradient-call-hover: linear-gradient(
+    to right,
+    theme(colors.green.600),
+    theme(colors.green.700)
+  );
+  --background-image-gradient-leave: linear-gradient(
+    to right,
+    theme(colors.orange.500),
+    theme(colors.red.500)
+  );
+  --background-image-gradient-leave-hover: linear-gradient(
+    to right,
+    theme(colors.orange.600),
+    theme(colors.red.600)
+  );
+  --background-image-gradient-info: linear-gradient(
+    to right,
+    theme(colors.blue.500),
+    theme(colors.blue.600)
+  );
+  --background-image-gradient-info-hover: linear-gradient(
+    to right,
+    theme(colors.blue.600),
+    theme(colors.blue.700)
+  );
+  --background-image-gradient-warning: linear-gradient(
+    to right,
+    theme(colors.yellow.500),
+    theme(colors.amber.500)
+  );
+  --background-image-gradient-warning-hover: linear-gradient(
+    to right,
+    theme(colors.yellow.600),
+    theme(colors.amber.600)
+  );
 }
 
 .dark {
@@ -216,10 +407,20 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* Focus gradient colors for dark mode */
-  --color-focus-from: #5eead4; /* teal-300 */
-  --color-focus-via: #38bdf8; /* sky-400 */
-  --color-focus-to: #60a5fa; /* blue-400 */
+  /* Focus gradient colors for dark mode - Updated to purple/violet */
+  --color-focus-from: #c4b5fd; /* violet-300 */
+  --color-focus-via: #a78bfa; /* violet-400 */
+  --color-focus-to: #818cf8; /* indigo-400 */
+
+  /* Dark mode adjustments for brand colors */
+  --color-brand-primary: #c4b5fd; /* violet-300 */
+  --color-brand-secondary: #a78bfa; /* violet-400 */
+  --color-brand-tertiary: #818cf8; /* indigo-400 */
+
+  /* Dark mode glass effects */
+  --glass-background: rgba(0, 0, 0, 0.2);
+  --glass-background-dark: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @layer base {
@@ -261,7 +462,7 @@
     @apply bg-primary/20 text-primary-foreground;
   }
 
-  /* Focus visible improvements with gradient ring */
+  /* Focus visible improvements with purple/violet gradient ring */
   :focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--color-focus-from),
@@ -297,7 +498,7 @@
     transition: box-shadow 0.2s ease;
   }
 
-  /* Animação de brilho suave para o foco */
+  /* Animação de brilho suave para o foco purple/violet */
   @keyframes focus-glow {
     0%,
     100% {
@@ -391,6 +592,115 @@
   .status-live::after {
     content: "";
     @apply absolute inset-0 rounded-full bg-red-500;
+  }
+}
+
+@layer utilities {
+  /* Brand Gradient Utilities */
+  .bg-brand-gradient {
+    background: var(--gradient-brand-primary);
+  }
+
+  .bg-brand-gradient-hover:hover {
+    background: var(--gradient-brand-primary-hover);
+  }
+
+  .bg-auth-gradient {
+    background: var(--gradient-brand-auth-bg);
+  }
+
+  /* Glass Morphism Utilities */
+  .glass-card {
+    background: var(--glass-background);
+    backdrop-filter: var(--glass-backdrop-blur);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-card-dark {
+    background: var(--glass-background-dark);
+    backdrop-filter: var(--glass-backdrop-blur);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* State Message Utilities */
+  .error-message {
+    background-color: var(--color-error-bg);
+    border-color: var(--color-error-border);
+    color: var(--color-error-text);
+  }
+
+  .success-message {
+    background-color: var(--color-success-bg);
+    border-color: var(--color-success-border);
+    color: var(--color-success-text);
+  }
+
+  .warning-message {
+    background-color: var(--color-warning-bg);
+    border-color: var(--color-warning-border);
+    color: var(--color-warning-text);
+  }
+
+  /* Purple Theme Hover States */
+  .hover-purple:hover {
+    background-color: var(--color-purple-hover-bg);
+    border-color: var(--color-purple-hover-border);
+  }
+
+  .hover-violet:hover {
+    background-color: var(--color-violet-hover-bg);
+    border-color: var(--color-violet-hover-border);
+  }
+
+  /* Brand Shadow Utilities */
+  .shadow-brand {
+    box-shadow: var(--shadow-brand);
+  }
+
+  .shadow-glass {
+    box-shadow: var(--shadow-glass);
+  }
+
+  .shadow-auth {
+    box-shadow: var(--shadow-auth-card);
+  }
+
+  /* Text Color Utilities */
+  .text-brand-primary {
+    color: var(--color-brand-primary);
+  }
+
+  .text-brand-secondary {
+    color: var(--color-brand-secondary);
+  }
+
+  .text-error-icon {
+    color: var(--color-error-icon);
+  }
+
+  .text-success-icon {
+    color: var(--color-success-icon);
+  }
+
+  .text-warning-icon {
+    color: var(--color-warning-icon);
+  }
+
+  /* Safe area utilities for mobile */
+  .pt-safe-top {
+    padding-top: var(--spacing-safe-top);
+  }
+
+  .pb-safe-bottom {
+    padding-bottom: var(--spacing-safe-bottom);
+  }
+
+  .pl-safe-left {
+    padding-left: var(--spacing-safe-left);
+  }
+
+  .pr-safe-right {
+    padding-right: var(--spacing-safe-right);
   }
 }
 
@@ -548,6 +858,11 @@
   }
 }
 
+/* // TODO: REMOVER APENAS PARA DEBUG */
+/* div[class*="absolute"][class*="bottom"][class*="right"] {
+  border: 2px solid red !important;
+} */
+
 /* Classes específicas para as ondas do logo */
 .animate-wave-outer {
   animation: wave-outer 2.4s ease-in-out infinite;
@@ -563,4 +878,60 @@
 
 .animate-logo-glow {
   animation: logo-glow 1.4s ease-in-out infinite 0.9s;
+}
+
+/* Landing Page Premium Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-10px) translateX(5px);
+  }
+  66% {
+    transform: translateY(5px) translateX(-5px);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+}
+
+.animate-float {
+  animation: float var(--duration, 20s) ease-in-out infinite;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
 }

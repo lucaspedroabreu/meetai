@@ -8,17 +8,8 @@ export default async function HomePage() {
     await headers()
   );
 
-  // Se erro, registra no log mas continua com graceful fallback
+  // Se não há sessão válida, mostra landing page
   if (error || !isValid || !session?.user) {
-    const errorMessage = error?.message || "Sessão inválida ou expirada";
-    console.log("ℹ️ Estado da sessão na página Home:", {
-      hasError: !!error,
-      isValid,
-      hasUser: !!session?.user,
-      message: errorMessage,
-    });
-
-    // Caso sessão inválida, mostra landing page
     return (
       <div className="animate-in fade-in duration-300">
         <LandingPage />
@@ -26,10 +17,10 @@ export default async function HomePage() {
     );
   }
 
-  // Server-side check: se sessão válida, mostra dashboard
+  // Se há sessão válida, mostra dashboard screen (layout já gerencia sidebar)
   return (
     <div className="animate-in fade-in duration-300">
-      <DashboardScreen userEmail={session.user.email} />
+      <DashboardScreen />
     </div>
   );
 }
