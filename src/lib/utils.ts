@@ -8,6 +8,50 @@ export function cn(...inputs: ClassValue[]) {
 // Mapeamento de erros do servidor (inglês → português)
 // Ordenados por especificidade (mais específicos primeiro)
 const ERROR_TRANSLATIONS: Record<string, string> = {
+  // OAuth e CORS errors - específicos de autenticação externa
+  "Invalid origin":
+    "Domínio não autorizado. Verifique se está acessando pelo endereço correto",
+  "Origin not allowed":
+    "Domínio não permitido. Acesse pelo endereço oficial da aplicação",
+  "CORS error": "Erro de origem cruzada. Verifique o domínio de acesso",
+  "Redirect URI mismatch":
+    "URL de redirecionamento não configurada. Entre em contato com o suporte",
+  "OAuth error": "Erro na autenticação externa. Tente novamente",
+  "Provider error": "Erro no provedor de autenticação. Tente outro método",
+  "Invalid redirect": "Redirecionamento inválido",
+  "Callback error": "Erro no retorno da autenticação",
+  "State mismatch":
+    "Estado de autenticação inválido. Tente fazer login novamente",
+  "Invalid state": "Estado de autenticação inválido",
+  "Authorization failed": "Falha na autorização",
+  "Provider configuration error": "Erro de configuração do provedor",
+  "Invalid provider": "Provedor de autenticação inválido",
+  "Provider not available": "Provedor de autenticação indisponível",
+
+  // Better Auth específicos
+  "Invalid baseURL": "URL base inválida. Verifique a configuração",
+  "Configuration error": "Erro de configuração do sistema",
+  "Database connection failed": "Falha na conexão com banco de dados",
+  "Session initialization failed": "Falha ao inicializar sessão",
+  "Plugin error": "Erro no plugin de autenticação",
+
+  // Rate limiting e segurança
+  "Rate limit exceeded":
+    "Limite de tentativas excedido. Aguarde antes de tentar novamente",
+  "Too many requests": "Muitas requisições. Tente novamente em alguns minutos",
+  "Suspicious activity":
+    "Atividade suspeita detectada. Conta temporariamente bloqueada",
+  "IP blocked": "IP bloqueado por segurança",
+  "Account suspended": "Conta suspensa. Entre em contato com o suporte",
+  "Security check failed": "Falha na verificação de segurança",
+
+  // Network e conectividade
+  "Network timeout": "Tempo limite de rede. Verifique sua conexão",
+  "Connection refused": "Conexão recusada",
+  "DNS resolution failed": "Falha na resolução DNS",
+  "SSL certificate error": "Erro no certificado SSL",
+  "TLS handshake failed": "Falha na negociação TLS",
+
   // Auth errors - específicos primeiro
   "Invalid email or password": "Email ou senha inválidos",
   "Invalid credentials": "Credenciais inválidas",
@@ -26,6 +70,16 @@ const ERROR_TRANSLATIONS: Record<string, string> = {
   "Email required": "Email é obrigatório",
   "Password required": "Senha é obrigatória",
   "Name required": "Nome é obrigatório",
+  "Weak password": "Senha muito fraca. Use uma senha mais forte",
+  "Password too short": "Senha muito curta. Use pelo menos 6 caracteres",
+  "Invalid email format": "Formato de email inválido",
+
+  // Verification errors
+  "Verification code expired": "Código de verificação expirado",
+  "Invalid verification code": "Código de verificação inválido",
+  "Verification failed": "Falha na verificação",
+  "Code already used": "Código já foi utilizado",
+  "Max verification attempts": "Máximo de tentativas de verificação atingido",
 
   // Generic errors
   "Internal server error": "Erro interno do servidor",

@@ -24,8 +24,8 @@ import { MeetAILogo } from "@/components/custom/Logo";
 import { authClient } from "@/lib/auth-client";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import { translateError } from "@/lib/utils";
+import { ErrorMessage } from "@/components/ui/error-message";
 import {
-  ErrorIcon,
   GoogleIcon,
   GitHubIcon,
   LoadingSpinner,
@@ -236,12 +236,15 @@ export default function SignInScreen() {
 
             {/* Erro geral do formulário */}
             {error && (
-              <div className="error-message border rounded-md p-3 flex items-start gap-2">
-                <ErrorIcon size={16} className="mt-0.5 text-error-icon" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium">{error}</p>
-                </div>
-              </div>
+              <ErrorMessage
+                error={error}
+                onRetry={() => {
+                  setError(null);
+                  // Opcional: focar no primeiro campo para facilitar nova tentativa
+                  form.setFocus("email");
+                }}
+                className="mt-2"
+              />
             )}
           </form>
         </Form>
