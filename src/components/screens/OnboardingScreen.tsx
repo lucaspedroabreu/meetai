@@ -7,15 +7,15 @@ import { MeetAILogo } from "@/components/custom/Logo";
 import { SuccessIcon } from "@/components/custom/icons";
 import { useRouter } from "next/navigation";
 
-interface WelcomeScreenProps {
+interface OnboardingScreenProps {
   userEmail: string;
   userName?: string;
 }
 
-export default function WelcomeScreen({
+export default function OnboardingScreen({
   userEmail,
   userName,
-}: WelcomeScreenProps) {
+}: OnboardingScreenProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isCompleting, setIsCompleting] = useState(false);
   const router = useRouter();
