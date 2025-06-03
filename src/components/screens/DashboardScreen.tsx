@@ -3,8 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { MeetAILogo } from "@/components/custom/Logo";
 import { Video, BarChart3, Settings } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 
 export default function DashboardScreen() {
+  const trpc = useTRPC();
+  const query = trpc.hello.queryOptions({
+    text: "Lucas",
+  });
+  const { data } = useQuery(query);
+
   return (
     <div className="min-h-full bg-gradient-to-br from-background via-background to-muted/5">
       <div className="p-6 lg:p-10">
@@ -17,7 +25,7 @@ export default function DashboardScreen() {
 
             <div className="space-y-4">
               <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-foreground via-foreground to-violet-600 bg-clip-text text-transparent animate-in fade-in duration-700">
-                Bem-vindo de volta!
+                Bem-vindo de volta! {data?.greeting}
               </h1>
               <p className="text-lg text-muted-foreground animate-in fade-in duration-700 delay-200">
                 Gerencie suas reuniões e colaborações com IA

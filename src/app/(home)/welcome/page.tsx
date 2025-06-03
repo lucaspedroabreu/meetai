@@ -1,4 +1,4 @@
-import WelcomeScreen from "@/components/screens/WelcomeScreen";
+import OnboardingScreen from "@/components/screens/OnboardingScreen";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAndValidateSession } from "@/lib/session";
@@ -24,7 +24,7 @@ export default async function WelcomePage() {
   // Se logado, mostra tela de welcome/onboarding
   return (
     <div className="animate-in fade-in duration-500">
-      <WelcomeScreen
+      <OnboardingScreen
         userEmail={session.user.email}
         userName={session.user.name}
       />
