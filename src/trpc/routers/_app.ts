@@ -27,7 +27,7 @@ export const appRouter = createTRPCRouter({
     .mutation(({ input }) => {
       // Aqui você faria a persistência no banco de dados
       return {
-        id: Math.random().toString(36),
+        id: crypto.randomUUID(),
         name: input.name,
         message: input.message || `Bem-vindo, ${input.name}!`,
         createdAt: new Date(),
