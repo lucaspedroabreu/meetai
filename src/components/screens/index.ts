@@ -5,4 +5,5 @@ export { default as SignUpScreen } from "./auth/SignUpScreen";
 // Main Screens
 export { default as LandingPage } from "./LandingPage";
 export { default as WelcomeScreen } from "./OnboardingScreen";
-export { default as DashboardScreen } from "./DashboardScreen";
+export { default as MeetingsScreen } from "./MeetingsScreen";
+export { default as AgentsScreen } from "./AgentsScreen";

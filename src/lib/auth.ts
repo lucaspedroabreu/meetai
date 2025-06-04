@@ -1,15 +1,15 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/db"; // your drizzle instance
+import { db } from "@/server/db"; // your drizzle instance
 // import {
 //   username,
 //   twoFactor,
 //   anonymous,
 //   admin,
 //   organization,
-// } from "better-auth/plugins";
+// } from "better-auth/plugins"; // for future implementation
 
-import * as schema from "@/db/schema";
+import * as schema from "@/server/db/schemas";
 
 const baseURL = process.env.BETTER_AUTH_URL || "https://www.meetai.com.br";
 
@@ -60,5 +60,5 @@ export const auth = betterAuth({
         })(),
     },
   },
-  // plugins: [username(), twoFactor(), anonymous(), admin(), organization()],
+  // plugins: [username(), twoFactor(), anonymous(), admin(), organization()], // for future implementation
 });

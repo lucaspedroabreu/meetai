@@ -935,3 +935,85 @@
 .animation-delay-400 {
   animation-delay: 400ms;
 }
+
+/* Toast styles - Sonner customization for better contrast */
+[data-sonner-toaster] {
+  --normal-bg: hsl(var(--background));
+  --normal-border: hsl(var(--border));
+  --normal-text: hsl(var(--foreground));
+  --success-bg: hsl(var(--color-success-bg));
+  --success-border: hsl(var(--color-success-border));
+  --success-text: hsl(var(--color-success-text));
+  --info-bg: hsl(220 14% 96%);
+  --info-border: hsl(220 13% 91%);
+  --info-text: hsl(220 9% 46%);
+  --warning-bg: hsl(var(--color-warning-bg));
+  --warning-border: hsl(var(--color-warning-border));
+  --warning-text: hsl(var(--color-warning-text));
+  --error-bg: hsl(var(--color-error-bg));
+  --error-border: hsl(var(--color-error-border));
+  --error-text: hsl(var(--color-error-text));
+}
+
+/* Dark mode toast styles */
+.dark [data-sonner-toaster] {
+  --normal-bg: hsl(var(--card));
+  --normal-border: hsl(var(--border));
+  --normal-text: hsl(var(--card-foreground));
+  --success-bg: hsl(142 76% 12%);
+  --success-border: hsl(142 76% 17%);
+  --success-text: hsl(142 76% 80%);
+  --info-bg: hsl(220 27% 18%);
+  --info-border: hsl(220 27% 23%);
+  --info-text: hsl(220 27% 85%);
+  --warning-bg: hsl(48 96% 12%);
+  --warning-border: hsl(48 96% 17%);
+  --warning-text: hsl(48 96% 80%);
+  --error-bg: hsl(0 93% 12%);
+  --error-border: hsl(0 93% 17%);
+  --error-text: hsl(0 93% 80%);
+}
+
+/* Ensure toast content has good contrast */
+[data-sonner-toast] {
+  background: var(--normal-bg) !important;
+  border-color: var(--normal-border) !important;
+  color: var(--normal-text) !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  background: var(--success-bg) !important;
+  border-color: var(--success-border) !important;
+  color: var(--success-text) !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background: var(--info-bg) !important;
+  border-color: var(--info-border) !important;
+  color: var(--info-text) !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background: var(--warning-bg) !important;
+  border-color: var(--warning-border) !important;
+  color: var(--warning-text) !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: var(--error-bg) !important;
+  border-color: var(--error-border) !important;
+  color: var(--error-text) !important;
+}
+
+/* Toast content typography */
+[data-sonner-toast] [data-title] {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+[data-sonner-toast] [data-description] {
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
+  opacity: 0.9;
+}

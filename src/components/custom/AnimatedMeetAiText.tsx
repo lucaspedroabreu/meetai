@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { cn } from "@/lib/utils";
 
 interface AnimatedMeetAiTextProps {
@@ -149,130 +149,126 @@ const fontWeights = {
   extrabold: "font-extrabold",
 };
 
-const AnimatedMeetAiText: React.FC<AnimatedMeetAiTextProps> = ({
-  textColor = "inherit",
-  dotsColor = "red",
-  showIDot = true,
-  iDotAnimated = true,
-  size = "xl",
-  fontWeight = "bold",
-  className,
-}) => {
-  const config = sizeConfigs[size];
-  const baseTextColor = textColors[textColor];
-  const baseDotColor = dotColors[dotsColor];
-  const dotBgColor = bgColors[dotsColor];
-  const baseFontWeight = fontWeights[fontWeight];
+const AnimatedMeetAiText = memo<AnimatedMeetAiTextProps>(
+  ({
+    textColor = "inherit",
+    dotsColor = "red",
+    showIDot = true,
+    iDotAnimated = true,
+    size = "xl",
+    fontWeight = "bold",
+    className,
+  }) => {
+    const config = sizeConfigs[size];
+    const baseTextColor = textColors[textColor];
+    const baseDotColor = dotColors[dotsColor];
+    const dotBgColor = bgColors[dotsColor];
+    const baseFontWeight = fontWeights[fontWeight];
 
-  // Determine cover background based on text color
-  const coverBg = textColor === "white" ? "bg-gray-900" : "bg-white";
+    // Determine cover background based on text color
+    const coverBg = textColor === "white" ? "bg-gray-900" : "bg-white";
 
-  return (
-    <span
-      className={cn(
-        "relative inline-block",
-        config.fontSize,
-        baseTextColor,
-        baseFontWeight,
-        className
-      )}
-    >
-      Meet
-      <span className={baseDotColor}>.</span>A
-      <span className="relative">
-        i
-        {showIDot && (
-          <>
-            {/* Cover for original i dot - always present when showIDot is true */}
-            <span
-              className={cn(
-                "absolute left-1/2 transform -translate-x-1/2",
-                config.dotTop
-              )}
-            >
-              <span
-                className={cn(
-                  "absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
-                  config.coverSize,
-                  coverBg
-                )}
-              />
-            </span>
-
-            {iDotAnimated ? (
-              // Animated version with wave effects
-              <span
-                className={cn(
-                  "absolute left-1/2 transform -translate-x-1/2",
-                  config.dotTop
-                )}
-              >
-                {/* Outer wave */}
-                <span
-                  className={cn(
-                    "absolute -translate-x-1/2 -translate-y-1/2 rounded-full animate-text-wave-outer",
-                    config.waveOuter,
-                    dotBgColor
-                  )}
-                />
-                {/* Middle wave */}
-                <span
-                  className={cn(
-                    "absolute -translate-x-1/2 -translate-y-1/2 rounded-full animate-text-wave-middle",
-                    config.waveMiddle,
-                    dotBgColor
-                  )}
-                />
-                {/* Inner wave */}
-                <span
-                  className={cn(
-                    "absolute -translate-x-1/2 -translate-y-1/2 rounded-full animate-text-wave-inner",
-                    config.waveInner,
-                    dotBgColor
-                  )}
-                />
-                {/* Core dot */}
-                <span
-                  className={cn(
-                    "absolute -translate-x-1/2 -translate-y-1/2 rounded-full animate-text-glow",
-                    config.waveCore,
-                    dotBgColor
-                  )}
-                />
-              </span>
-            ) : (
-              // Static version
-              <span
-                className={cn(
-                  "absolute left-1/2 transform -translate-x-1/2",
-                  config.dotTop
-                )}
-              >
-                {/* Subtle outer glow */}
-                <span
-                  className={cn(
-                    "absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
-                    config.waveInner,
-                    dotBgColor
-                  )}
-                  style={{ opacity: 0.15 }}
-                />
-                {/* Core dot */}
-                <span
-                  className={cn(
-                    "absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
-                    config.waveCore,
-                    dotBgColor
-                  )}
-                />
-              </span>
-            )}
-          </>
+    return (
+      <span
+        className={cn(
+          "relative inline-block",
+          config.fontSize,
+          baseTextColor,
+          baseFontWeight,
+          className
         )}
+      >
+        Meet
+        <span className={baseDotColor}>.</span>A
+        <span className="relative">
+          i
+          {showIDot && (
+            <>
+              {/* Cover for original i dot - always present when showIDot is true */}
+              <span
+                className={cn(
+                  "absolute left-1/2 transform -translate-x-1/2",
+                  config.dotTop
+                )}
+              >
+                <span
+                  className={cn(
+                    "absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
+                    config.coverSize,
+                    coverBg
+                  )}
+                />
+              </span>
+
+              {/* Animated waves - only when iDotAnimated is true */}
+              {iDotAnimated && (
+                <span
+                  className={cn(
+                    "absolute left-1/2 transform -translate-x-1/2",
+                    config.dotTop
+                  )}
+                >
+                  {/* Outer wave */}
+                  <span
+                    className={cn(
+                      "absolute -translate-x-1/2 -translate-y-1/2 rounded-full animate-wave-outer",
+                      config.waveOuter,
+                      dotBgColor
+                    )}
+                  />
+                  {/* Middle wave */}
+                  <span
+                    className={cn(
+                      "absolute -translate-x-1/2 -translate-y-1/2 rounded-full animate-wave-middle",
+                      config.waveMiddle,
+                      dotBgColor
+                    )}
+                  />
+                  {/* Inner wave */}
+                  <span
+                    className={cn(
+                      "absolute -translate-x-1/2 -translate-y-1/2 rounded-full animate-wave-inner",
+                      config.waveInner,
+                      dotBgColor
+                    )}
+                  />
+                  {/* Core */}
+                  <span
+                    className={cn(
+                      "absolute -translate-x-1/2 -translate-y-1/2 rounded-full animate-logo-glow",
+                      config.waveCore,
+                      dotBgColor
+                    )}
+                  />
+                </span>
+              )}
+
+              {/* Static dot when animation is disabled */}
+              {!iDotAnimated && (
+                <span
+                  className={cn(
+                    "absolute left-1/2 transform -translate-x-1/2",
+                    config.dotTop
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
+                      config.waveCore,
+                      dotBgColor
+                    )}
+                  />
+                </span>
+              )}
+            </>
+          )}
+        </span>
       </span>
-    </span>
-  );
-};
+    );
+  }
+);
+
+AnimatedMeetAiText.displayName = "AnimatedMeetAiText";
 
 // CSS animations (add to your global CSS or Tailwind config)
 const animationStyles = `
