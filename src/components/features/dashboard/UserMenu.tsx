@@ -59,9 +59,10 @@ const getUserInfo = (user?: UserType): UserInfo => {
   const displayName =
     user.name ||
     user.email
-      .split("@")[0]
-      .replace(".", " ")
-      .replace(/\b\w/g, (l) => l.toUpperCase());
+      ?.split("@")[0]
+      ?.replace(".", " ")
+      ?.replace(/\b\w/g, (l) => l.toUpperCase()) ||
+    "Usuário";
 
   // Gerar iniciais do nome ou email
   const initials = user.name
@@ -71,16 +72,18 @@ const getUserInfo = (user?: UserType): UserInfo => {
         .join("")
         .slice(0, 2)
     : user.email
-        .split("@")[0]
-        .split(".")
-        .map((part) => part[0]?.toUpperCase())
-        .join("")
-        .slice(0, 2) || user.email.slice(0, 2).toUpperCase();
+        ?.split("@")[0]
+        ?.split(".")
+        ?.map((part) => part[0]?.toUpperCase())
+        ?.join("")
+        ?.slice(0, 2) ||
+      user.email?.slice(0, 2)?.toUpperCase() ||
+      "U";
 
   return {
     initials,
     displayName,
-    email: user.email,
+    email: user.email || "",
   };
 };
 

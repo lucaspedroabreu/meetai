@@ -16,10 +16,20 @@ interface DashboardLayoutProps {
 }
 
 // Context para dados do usuário no dashboard
-const DashboardUserContext = createContext<User | undefined>(undefined);
+const DashboardUserContext = createContext<User | undefined | null>(null);
 
 export const useDashboardUser = () => {
-  return useContext(DashboardUserContext);
+  const context = useContext(DashboardUserContext);
+
+  // Se o contexto for null, significa que o hook está sendo usado fora do provider
+  if (context === null) {
+    throw new Error(
+      "useDashboardUser deve ser usado dentro de um DashboardUserContext.Provider. " +
+        "Certifique-se de que o componente está envolvido pelo DashboardLayout."
+    );
+  }
+
+  return context;
 };
 
 // Memoizando o layout interno

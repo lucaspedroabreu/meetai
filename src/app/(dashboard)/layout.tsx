@@ -14,7 +14,7 @@ export default async function DashboardLayoutWrapper({
 
   // Se não há sessão válida, redireciona para a página de login
   if (error || !isValid || !session?.user) {
-    redirect("/login");
+    redirect("/sign-in");
   }
 
   // Se o usuário está logado, usa o layout do dashboard
