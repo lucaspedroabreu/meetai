@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useAllAgents } from "./hooks/useAgentsData";
+import { useAllAgents } from "../../../hooks/useAgentsData";
 
 const AgentsCountContent = () => {
   const { data: agentsData } = useAllAgents();

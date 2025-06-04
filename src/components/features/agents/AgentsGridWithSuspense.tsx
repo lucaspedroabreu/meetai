@@ -6,7 +6,7 @@ import { LoadingState } from "@/components/custom/LoadingState";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import AgentsGrid from "./AgentsGrid";
-import { useAllAgents } from "./hooks/useAgentsData";
+import { useAllAgents } from "../../../hooks/useAgentsData";
 import type { Agent } from "./types";
 
 interface AgentsGridContentProps {

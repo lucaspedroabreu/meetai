@@ -7,7 +7,7 @@ export type {
 } from "./types";
 
 // Hooks
-export { useAllAgents, useMyAgents } from "./hooks/useAgentsData";
+export { useAllAgents, useMyAgents } from "../../../hooks/useAgentsData";
 
 // Welcome Section
 export { default as AgentsWelcomeSection } from "./AgentsWelcomeSection";

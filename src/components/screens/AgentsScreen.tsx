@@ -1,7 +1,7 @@
 "use client";
 
 import { useToast } from "@/hooks/useToast";
-import { useMyAgents } from "@/components/features/agents/hooks/useAgentsData";
+import { useMyAgents } from "@/hooks/useAgentsData";
 import {
   AgentsWelcomeSection,
   CreateAgentSection,
@@ -11,9 +11,6 @@ import {
 
 export default function AgentsScreen() {
   const toast = useToast();
-
-  // Apenas para debug - pode ser removido depois
-  const { data: myAgentsData } = useMyAgents();
 
   // Handlers para as ações
   const handleCreateAgent = () => {
@@ -45,12 +42,6 @@ export default function AgentsScreen() {
       <div className="w-full space-y-8 p-6">
         {/* Welcome Section - sempre visível */}
         <AgentsWelcomeSection />
-
-        {/* Debug info - pode ser removido */}
-        <div>
-          <p>Agents do usuário</p>
-          <pre>{JSON.stringify(myAgentsData, null, 2)}</pre>
-        </div>
 
         {/* Create Agent Section - sempre visível */}
         <CreateAgentSection
