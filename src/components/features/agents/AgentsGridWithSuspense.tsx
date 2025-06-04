@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { useQueryClient } from "@tanstack/react-query";
 import { LoadingState } from "@/components/custom/LoadingState";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
@@ -12,11 +13,13 @@ import type { Agent } from "./types";
 interface AgentsGridContentProps {
   onCreateFirstAgent?: () => void;
   onConfigureAgent?: (agent: Agent) => void;
+  onRetry: () => void;
 }
 
 const AgentsGridContent = ({
   onCreateFirstAgent,
   onConfigureAgent,
+  onRetry,
 }: AgentsGridContentProps) => {
   const { data: agentsData } = useAllAgents();
 
@@ -27,7 +30,7 @@ const AgentsGridContent = ({
       isError={false}
       onCreateFirstAgent={onCreateFirstAgent}
       onConfigureAgent={onConfigureAgent}
-      onRetry={() => window.location.reload()}
+      onRetry={onRetry}
     />
   );
 };
@@ -86,15 +89,26 @@ export const AgentsGridWithSuspense = ({
   onCreateFirstAgent,
   onConfigureAgent,
 }: AgentsGridWithSuspenseProps) => {
+  const queryClient = useQueryClient();
+
+  const handleRefetch = async () => {
+    // Invalida e refaz todas as queries relacionadas aos agents
+    await queryClient.invalidateQueries({
+      predicate: (query) =>
+        Array.isArray(query.queryKey) &&
+        query.queryKey.some(
+          (key) => typeof key === "string" && key.includes("agents")
+        ),
+    });
+  };
+
   return (
-    <ErrorBoundary
-      FallbackComponent={AgentsGridError}
-      onReset={() => window.location.reload()}
-    >
+    <ErrorBoundary FallbackComponent={AgentsGridError} onReset={handleRefetch}>
       <Suspense fallback={<AgentsGridLoading />}>
         <AgentsGridContent
           onCreateFirstAgent={onCreateFirstAgent}
           onConfigureAgent={onConfigureAgent}
+          onRetry={handleRefetch}
         />
       </Suspense>
     </ErrorBoundary>
