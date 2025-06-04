@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { baseProcedure, protectedProcedure, createTRPCRouter } from "../init";
 import { agents as agentsTable } from "@/server/db/schemas/agents";
 import { z } from "zod";
@@ -69,9 +69,7 @@ export const agentsRouter = createTRPCRouter({
         .select()
         .from(agentsTable)
         .where(
-          eq(agentsTable.id, input.id)
-          // Garantir que o agent pertence ao usuário
-          // and(eq(agentsTable.id, input.id), eq(agentsTable.userId, ctx.user.id))
+          and(eq(agentsTable.id, input.id), eq(agentsTable.userId, ctx.user.id))
         )
         .limit(1);
 
