@@ -1017,3 +1017,71 @@
   line-height: 1.1875rem;
   opacity: 0.9;
 }
+
+[data-sonner-toast] [data-description] {
+  opacity: 0.8;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* 🪄 ANIMAÇÕES MÁGICAS DAS PARTÍCULAS ✨ */
+@keyframes magical-float {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-10px) translateX(var(--drift-distance, 0px)) scale(1);
+  }
+  50% {
+    transform: translateY(-20px)
+      translateX(calc(var(--drift-distance, 0px) * 1.5)) scale(1.1);
+  }
+  75% {
+    transform: translateY(-10px) translateX(var(--drift-distance, 0px)) scale(1);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.animate-magical-float {
+  animation: magical-float linear infinite;
+}
+
+/* Variações de movimento mágico para maior dinamismo */
+@keyframes magical-drift {
+  0%,
+  100% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateX(15px) rotate(90deg);
+  }
+  50% {
+    transform: translateX(30px) rotate(180deg);
+  }
+  75% {
+    transform: translateX(15px) rotate(270deg);
+  }
+}
+
+@keyframes magical-pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(167, 139, 250, 0.3);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.6),
+      0 0 30px rgba(139, 92, 246, 0.4);
+    filter: brightness(1.3);
+  }
+}
