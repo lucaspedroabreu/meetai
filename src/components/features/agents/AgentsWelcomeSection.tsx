@@ -2,14 +2,9 @@
 
 import { MeetAILogo } from "@/components/features/brand";
 import { useDashboardUser } from "@/components/layout/DashboardLayout";
+import { AgentsCount } from "./AgentsCount";
 
-interface AgentsWelcomeSectionProps {
-  agentsCount?: number;
-}
-
-export default function AgentsWelcomeSection({
-  agentsCount = 0,
-}: AgentsWelcomeSectionProps) {
+export default function AgentsWelcomeSection() {
   const user = useDashboardUser();
 
   return (
@@ -25,9 +20,9 @@ export default function AgentsWelcomeSection({
         <p className="text-lg text-muted-foreground">
           Gerencie e configure seus assistentes de IA personalizados
         </p>
-        <p className="text-md text-muted-foreground">
-          Você possui {agentsCount} agentes ativos
-        </p>
+        <div className="text-md text-muted-foreground">
+          <AgentsCount />
+        </div>
       </div>
     </div>
   );
