@@ -1,11 +1,12 @@
 import { initTRPC } from "@trpc/server";
-import { cache } from "react";
+// cache removido - não é seguro para contextos com dados de usuário
 import superjson from "superjson";
 import { headers } from "next/headers";
 import { getAndValidateSession } from "@/lib/session";
 import { db } from "@/server/db";
 
-export const createTRPCContext = cache(async () => {
+// Função async pura - sem cache para evitar vazamento de dados entre usuários
+export const createTRPCContext = async () => {
   // Obter headers da requisição
   const reqHeaders = await headers();
 
@@ -84,7 +85,7 @@ export const createTRPCContext = cache(async () => {
   };
 
   return context;
-});
+};
 
 // Inferir o tipo do context
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
