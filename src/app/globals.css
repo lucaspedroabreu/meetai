@@ -935,3 +935,153 @@
 .animation-delay-400 {
   animation-delay: 400ms;
 }
+
+/* Toast styles - Sonner customization for better contrast */
+[data-sonner-toaster] {
+  --normal-bg: hsl(var(--background));
+  --normal-border: hsl(var(--border));
+  --normal-text: hsl(var(--foreground));
+  --success-bg: hsl(var(--color-success-bg));
+  --success-border: hsl(var(--color-success-border));
+  --success-text: hsl(var(--color-success-text));
+  --info-bg: hsl(220 14% 96%);
+  --info-border: hsl(220 13% 91%);
+  --info-text: hsl(220 9% 46%);
+  --warning-bg: hsl(var(--color-warning-bg));
+  --warning-border: hsl(var(--color-warning-border));
+  --warning-text: hsl(var(--color-warning-text));
+  --error-bg: hsl(var(--color-error-bg));
+  --error-border: hsl(var(--color-error-border));
+  --error-text: hsl(var(--color-error-text));
+}
+
+/* Dark mode toast styles */
+.dark [data-sonner-toaster] {
+  --normal-bg: hsl(var(--card));
+  --normal-border: hsl(var(--border));
+  --normal-text: hsl(var(--card-foreground));
+  --success-bg: hsl(142 76% 12%);
+  --success-border: hsl(142 76% 17%);
+  --success-text: hsl(142 76% 80%);
+  --info-bg: hsl(220 27% 18%);
+  --info-border: hsl(220 27% 23%);
+  --info-text: hsl(220 27% 85%);
+  --warning-bg: hsl(48 96% 12%);
+  --warning-border: hsl(48 96% 17%);
+  --warning-text: hsl(48 96% 80%);
+  --error-bg: hsl(0 93% 12%);
+  --error-border: hsl(0 93% 17%);
+  --error-text: hsl(0 93% 80%);
+}
+
+/* Ensure toast content has good contrast */
+[data-sonner-toast] {
+  background: var(--normal-bg) !important;
+  border-color: var(--normal-border) !important;
+  color: var(--normal-text) !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  background: var(--success-bg) !important;
+  border-color: var(--success-border) !important;
+  color: var(--success-text) !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background: var(--info-bg) !important;
+  border-color: var(--info-border) !important;
+  color: var(--info-text) !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background: var(--warning-bg) !important;
+  border-color: var(--warning-border) !important;
+  color: var(--warning-text) !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: var(--error-bg) !important;
+  border-color: var(--error-border) !important;
+  color: var(--error-text) !important;
+}
+
+/* Toast content typography */
+[data-sonner-toast] [data-title] {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+[data-sonner-toast] [data-description] {
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
+  opacity: 0.9;
+}
+
+[data-sonner-toast] [data-description] {
+  opacity: 0.8;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* 🪄 ANIMAÇÕES MÁGICAS DAS PARTÍCULAS ✨ */
+@keyframes magical-float {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-10px) translateX(var(--drift-distance, 0px)) scale(1);
+  }
+  50% {
+    transform: translateY(-20px)
+      translateX(calc(var(--drift-distance, 0px) * 1.5)) scale(1.1);
+  }
+  75% {
+    transform: translateY(-10px) translateX(var(--drift-distance, 0px)) scale(1);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.animate-magical-float {
+  animation: magical-float linear infinite;
+}
+
+/* Variações de movimento mágico para maior dinamismo */
+@keyframes magical-drift {
+  0%,
+  100% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateX(15px) rotate(90deg);
+  }
+  50% {
+    transform: translateX(30px) rotate(180deg);
+  }
+  75% {
+    transform: translateX(15px) rotate(270deg);
+  }
+}
+
+@keyframes magical-pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(167, 139, 250, 0.3);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.6),
+      0 0 30px rgba(139, 92, 246, 0.4);
+    filter: brightness(1.3);
+  }
+}

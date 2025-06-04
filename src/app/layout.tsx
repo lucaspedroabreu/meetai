@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { TRPCReactProvider } from "@/trpc/client";
+import { TRPCReactProvider } from "@/server/trpc/client";
+import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 
@@ -73,6 +74,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <TRPCReactProvider>{children}</TRPCReactProvider>
+        <Toaster />
       </body>
     </html>
   );

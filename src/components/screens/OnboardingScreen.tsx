@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MeetAILogo } from "@/components/custom/Logo";
+import { MeetAILogo } from "@/components/features/brand";
 import { SuccessIcon } from "@/components/custom/icons";
 import { useRouter } from "next/navigation";
 

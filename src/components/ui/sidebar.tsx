@@ -73,6 +73,7 @@ function SidebarProvider({
   // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(defaultOpen);
   const open = openProp ?? _open;
+
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value;
@@ -88,10 +89,15 @@ function SidebarProvider({
     [setOpenProp, open]
   );
 
-  // Helper to toggle the sidebar.
+  // Helper to toggle the sidebar - memoizado para estabilidade
   const toggleSidebar = React.useCallback(() => {
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-  }, [isMobile, setOpen]);
+  }, [isMobile, setOpen, setOpenMobile]);
+
+  // setOpenMobile também memoizado
+  const setOpenMobileStable = React.useCallback((open: boolean) => {
+    setOpenMobile(open);
+  }, []);
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -111,7 +117,7 @@ function SidebarProvider({
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
   // This makes it easier to style the sidebar with Tailwind classes.
-  const state = open ? "expanded" : "collapsed";
+  const state = React.useMemo(() => (open ? "expanded" : "collapsed"), [open]);
 
   const contextValue = React.useMemo<SidebarContextProps>(
     () => ({
@@ -120,10 +126,18 @@ function SidebarProvider({
       setOpen,
       isMobile,
       openMobile,
-      setOpenMobile,
+      setOpenMobile: setOpenMobileStable,
       toggleSidebar,
     }),
-    [state, open, setOpen, isMobile, openMobile, toggleSidebar]
+    [
+      state,
+      open,
+      setOpen,
+      isMobile,
+      openMobile,
+      setOpenMobileStable,
+      toggleSidebar,
+    ]
   );
 
   return (

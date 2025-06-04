@@ -3,6 +3,28 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
+/**
+ * shadcn/ui Button Component - CUSTOMIZADO
+ *
+ * Este é um componente shadcn/ui base que foi estendido com variantes customizadas
+ * específicas para o projeto Meet AI:
+ *
+ * Variantes customizadas adicionadas:
+ * - call: Botão com gradiente verde para ações de chamada
+ * - leave: Botão com gradiente vermelho para sair de chamadas
+ * - calendar: Botão com gradiente roxo para funcionalidades de calendário
+ * - ai: Botão com gradiente especial para recursos de IA
+ * - info: Botão com gradiente azul para informações
+ * - warning: Botão com gradiente amarelo para avisos
+ * - icon: Botão circular otimizado para ícones
+ *
+ * Funcionalidades customizadas:
+ * - Sistema de glow/brilho opcional
+ * - Temas organizados por propósito (layout, typography, shape, etc.)
+ * - Efeitos hover e focus customizados
+ * - Suporte a gradientes e backdrop-blur
+ */
+
 // Base theme classes organized by purpose
 const baseClasses = {
   layout:
