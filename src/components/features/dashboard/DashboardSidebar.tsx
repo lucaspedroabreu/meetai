@@ -2,6 +2,7 @@
 
 import React, { memo, useMemo } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -22,6 +23,7 @@ import { UserMenu } from "./UserMenu";
 import {
   dashboardSidebarNavigation,
   type SidebarNavigationSection,
+  type SidebarNavigationItem,
 } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
 import type { User } from "@/types/user";
@@ -92,7 +94,7 @@ const NavigationMenuItem = memo(
     item,
     isUpgrade,
   }: {
-    item: any & { isActive: boolean };
+    item: SidebarNavigationItem & { isActive: boolean };
     isUpgrade: boolean;
   }) => {
     return (
@@ -116,7 +118,7 @@ const NavigationMenuItem = memo(
               )
         )}
       >
-        <a href={item.url} className="flex items-center gap-4 relative z-10">
+        <Link href={item.url} className="flex items-center gap-4 relative z-10">
           {isUpgrade && (
             <div className="absolute inset-0 bg-gradient-to-r from-violet-400/10 to-purple-400/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
           )}
@@ -170,7 +172,7 @@ const NavigationMenuItem = memo(
               {item.badge}
             </span>
           )}
-        </a>
+        </Link>
       </SidebarMenuButton>
     );
   },
