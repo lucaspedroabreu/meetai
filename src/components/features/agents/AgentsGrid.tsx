@@ -15,6 +15,15 @@ interface AgentsGridProps {
   onRetry?: () => void;
 }
 
+const AgentsHeader = () => (
+  <div className="mb-6">
+    <h3 className="text-2xl font-semibold mb-2">Seus Agentes</h3>
+    <p className="text-muted-foreground">
+      Visualize e gerencie todos os seus assistentes IA
+    </p>
+  </div>
+);
+
 export default function AgentsGrid({
   agents,
   isLoading,
@@ -26,12 +35,7 @@ export default function AgentsGrid({
   if (isLoading) {
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="mb-6">
-          <h3 className="text-2xl font-semibold mb-2">Seus Agentes</h3>
-          <p className="text-muted-foreground">
-            Visualize e gerencie todos os seus assistentes IA
-          </p>
-        </div>
+        <AgentsHeader />
 
         <LoadingState
           title="Carregando Agentes"
@@ -46,12 +50,7 @@ export default function AgentsGrid({
   if (isError) {
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="mb-6">
-          <h3 className="text-2xl font-semibold mb-2">Seus Agentes</h3>
-          <p className="text-muted-foreground">
-            Visualize e gerencie todos os seus assistentes IA
-          </p>
-        </div>
+        <AgentsHeader />
 
         <ErrorMessage
           error="Erro ao carregar agentes. Verifique sua conexão e tente novamente."
@@ -64,12 +63,7 @@ export default function AgentsGrid({
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="mb-6">
-        <h3 className="text-2xl font-semibold mb-2">Seus Agentes</h3>
-        <p className="text-muted-foreground">
-          Visualize e gerencie todos os seus assistentes IA
-        </p>
-      </div>
+      <AgentsHeader />
 
       {!agents || agents.length === 0 ? (
         <AgentsEmptyState onCreateFirstAgent={onCreateFirstAgent} />

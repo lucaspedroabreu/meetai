@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { ErrorBoundary } from "react-error-boundary";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAllAgents } from "../../../hooks/useAgentsData";
 
 const AgentsCountContent = () => {
@@ -42,10 +43,23 @@ const AgentsCountError = ({
 );
 
 export const AgentsCount = () => {
+  const queryClient = useQueryClient();
+
+  const handleErrorReset = async () => {
+    // Invalida e refaz todas as queries relacionadas aos agents
+    await queryClient.invalidateQueries({
+      predicate: (query) =>
+        Array.isArray(query.queryKey) &&
+        query.queryKey.some(
+          (key) => typeof key === "string" && key.includes("agents")
+        ),
+    });
+  };
+
   return (
     <ErrorBoundary
       FallbackComponent={AgentsCountError}
-      onReset={() => window.location.reload()}
+      onReset={handleErrorReset}
     >
       <Suspense fallback={<AgentsCountLoading />}>
         <AgentsCountContent />
