@@ -6,14 +6,15 @@ export const CACHE_CONFIG = {
     gcTime: 30 * 60 * 1000, // 30 minutos
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   },
 
-  // Dados de agentes - podem mudar com mais frequência
+  // Dados de agentes - configuração equilibrada
   AGENTS: {
-    staleTime: 2 * 60 * 1000, // 2 minutos
-    gcTime: 10 * 60 * 1000, // 10 minutos
+    staleTime: 2 * 60 * 1000, // 2 minutos - equilibrado
+    gcTime: 10 * 60 * 1000, // 10 minutos - razoável
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: false, // Manter desabilitado para UX
   },
 
   // Dados de reuniões - podem mudar frequentemente
@@ -22,6 +23,7 @@ export const CACHE_CONFIG = {
     gcTime: 5 * 60 * 1000, // 5 minutos
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   },
 
   // Dados estáticos/configurações
@@ -30,5 +32,6 @@ export const CACHE_CONFIG = {
     gcTime: 24 * 60 * 60 * 1000, // 24 horas
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   },
 } as const;

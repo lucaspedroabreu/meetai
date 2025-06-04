@@ -54,7 +54,7 @@ export const APP_METADATA = {
 } as const;
 
 // Configurações de cache e performance
-export const CACHE_CONFIG = {
+export const SWR_CONFIG = {
   swr: {
     dedupingInterval: 2000,
     revalidateOnFocus: false,
