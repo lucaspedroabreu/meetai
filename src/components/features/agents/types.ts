@@ -23,3 +23,8 @@ export interface AgentsState {
   isLoading?: boolean;
   error?: string | null;
 }
+
+export type AgentsCountState =
+  | { status: "loading" }
+  | { status: "error"; message?: string }
+  | { status: "success"; count: number };
