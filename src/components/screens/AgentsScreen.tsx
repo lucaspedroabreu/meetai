@@ -1,7 +1,6 @@
 "use client";
 
 import { useToast } from "@/hooks/useToast";
-import { useMyAgents } from "@/hooks/useAgentsData";
 import {
   AgentsWelcomeSection,
   CreateAgentSection,
