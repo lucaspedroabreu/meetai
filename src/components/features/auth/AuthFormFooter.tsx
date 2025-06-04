@@ -9,6 +9,7 @@ export function AuthFormFooter() {
         <Link
           href="/terms"
           className="text-brand-primary hover:text-brand-secondary underline underline-offset-4"
+          aria-label="Leia nossos termos de uso"
         >
           {AUTH_FORM_TEXTS.FOOTER.termsLink}
         </Link>{" "}
@@ -16,6 +17,7 @@ export function AuthFormFooter() {
         <Link
           href="/privacy"
           className="text-brand-primary hover:text-brand-secondary underline underline-offset-4"
+          aria-label="Leia nossa política de privacidade"
         >
           {AUTH_FORM_TEXTS.FOOTER.privacyLink}
         </Link>

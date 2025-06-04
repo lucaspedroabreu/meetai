@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ErrorMessage } from "@/components/custom-ui/error-message";
 import { LoadingSpinner } from "@/components/custom/icons";
+import { cn } from "@/lib/utils";
 
 interface AuthFormActionsProps {
   submitLabel: string;
@@ -21,6 +22,8 @@ export function AuthFormActions({
   onErrorRetry,
   tabIndex = 3,
 }: AuthFormActionsProps) {
+  const isDisabled = !areAllFieldsValid() && !isLoading;
+
   return (
     <>
       <div className="pt-1">
@@ -29,11 +32,12 @@ export function AuthFormActions({
           variant="default"
           size="lg"
           disabled={isLoading}
-          className={`w-full transition-all duration-200 bg-brand-gradient hover:bg-brand-gradient-hover ${
-            !areAllFieldsValid() && !isLoading
+          className={cn(
+            "w-full transition-all duration-200",
+            isDisabled
               ? "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300"
-              : ""
-          }`}
+              : "bg-brand-gradient hover:bg-brand-gradient-hover"
+          )}
           tabIndex={tabIndex}
         >
           {isLoading ? (

@@ -72,13 +72,19 @@ export function AuthFormField<T extends FieldValues>({
             </FormLabel>
             <FormControl>
               <Input
+                {...field}
                 type={type}
                 placeholder={placeholder}
                 disabled={isLoading}
-                value={field.value}
                 onFocus={() => onFocus(name)}
-                onBlur={() => onBlur(name, field)}
-                onChange={(e) => onChange(name, field, e.target.value)}
+                onBlur={(e) => {
+                  field.onBlur();
+                  onBlur(name, field);
+                }}
+                onChange={(e) => {
+                  field.onChange(e);
+                  onChange(name, field, e.target.value);
+                }}
                 className={`h-11 transition-all duration-200 ${getFieldStyles(
                   name
                 )}`}

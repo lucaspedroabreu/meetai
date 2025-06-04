@@ -169,8 +169,17 @@ export default function SignUpScreen() {
 
   const handleErrorRetry = () => {
     setError(null);
-    // Opcional: focar no primeiro campo para facilitar nova tentativa
-    form.setFocus("name");
+
+    // Focar no primeiro campo que tem erro, se houver
+    const errors = form.formState.errors;
+    const firstErrorField = Object.keys(errors)[0] as keyof SignUpFormData;
+
+    if (firstErrorField) {
+      form.setFocus(firstErrorField);
+    } else {
+      // Se não há erros de campo específicos, focar no primeiro campo para facilitar nova tentativa
+      form.setFocus("name");
+    }
   };
 
   if (success) {
