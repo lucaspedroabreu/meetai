@@ -76,7 +76,11 @@ export const AgentsErrorBoundary = ({ children }: AgentsErrorBoundaryProps) => {
     <ErrorBoundary
       FallbackComponent={AgentsErrorFallback}
       onError={handleError}
-      onReset={() => {}}
+      onReset={() => {
+        // Could invalidate agents queries or reset relevant state
+        // Optional: Add any cleanup logic or analytics tracking
+        console.log("Error boundary reset");
+      }}
     >
       {children}
     </ErrorBoundary>

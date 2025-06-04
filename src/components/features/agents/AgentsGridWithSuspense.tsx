@@ -26,8 +26,6 @@ const AgentsGridContent = ({
   return (
     <AgentsGrid
       agents={agentsData}
-      isLoading={false}
-      isError={false}
       onCreateFirstAgent={onCreateFirstAgent}
       onConfigureAgent={onConfigureAgent}
       onRetry={onRetry}

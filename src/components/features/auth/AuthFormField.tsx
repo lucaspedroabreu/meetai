@@ -77,7 +77,7 @@ export function AuthFormField<T extends FieldValues>({
                 placeholder={placeholder}
                 disabled={isLoading}
                 onFocus={() => onFocus(name)}
-                onBlur={(e) => {
+                onBlur={(_e) => {
                   field.onBlur();
                   onBlur(name, field);
                 }}

@@ -65,12 +65,10 @@ export const createTRPCContext = async () => {
     },
 
     requireRole: (_requiredRole: string) => {
-      const user = context.requireAuth();
-      // Assumindo que você tenha roles no user - ajuste conforme sua implementação
-      // if (user.role !== requiredRole) {
-      //   throw new Error(`Acesso negado. Role necessária: ${requiredRole}`);
-      // }
-      return user;
+      if (!isValid || !session?.user) {
+        throw new Error("Autenticação necessária para acessar este recurso");
+      }
+      return session.user;
     },
 
     // Logs estruturados
