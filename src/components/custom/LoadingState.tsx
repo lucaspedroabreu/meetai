@@ -10,6 +10,30 @@ interface LoadingStateProps {
   showSpinner?: boolean;
 }
 
+const sizeConfig = {
+  sm: {
+    container: "p-6",
+    spinner: "size-4",
+    title: "text-base",
+    description: "text-xs",
+    gap: "gap-y-4",
+  },
+  md: {
+    container: "p-8",
+    spinner: "size-6",
+    title: "text-lg",
+    description: "text-sm",
+    gap: "gap-y-6",
+  },
+  lg: {
+    container: "p-12",
+    spinner: "size-8",
+    title: "text-xl",
+    description: "text-base",
+    gap: "gap-y-8",
+  },
+};
+
 export function LoadingState({
   title,
   description,
@@ -18,30 +42,6 @@ export function LoadingState({
   className,
   showSpinner = true,
 }: LoadingStateProps) {
-  const sizeConfig = {
-    sm: {
-      container: "p-6",
-      spinner: "size-4",
-      title: "text-base",
-      description: "text-xs",
-      gap: "gap-y-4",
-    },
-    md: {
-      container: "p-8",
-      spinner: "size-6",
-      title: "text-lg",
-      description: "text-sm",
-      gap: "gap-y-6",
-    },
-    lg: {
-      container: "p-12",
-      spinner: "size-8",
-      title: "text-xl",
-      description: "text-base",
-      gap: "gap-y-8",
-    },
-  };
-
   const config = sizeConfig[size];
 
   return (
