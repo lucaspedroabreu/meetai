@@ -1,25 +1,19 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/server/trpc/client";
-import { CACHE_CONFIG } from "@/lib/cache-keys";
 import { useToast } from "@/hooks/useToast";
+import { useMyAgents } from "@/components/features/agents/hooks/useAgentsData";
 import {
   AgentsWelcomeSection,
   CreateAgentSection,
-  AgentsGrid,
+  AgentsGridWithSuspense,
   type Agent,
 } from "@/components/features/agents";
 
 export default function AgentsScreen() {
-  const trpc = useTRPC();
   const toast = useToast();
 
-  // Manter apenas query de agentes (dados que mudam)
-  const { data: agentsData, isLoading } = useQuery({
-    ...trpc.agents.getMany.queryOptions(),
-    ...CACHE_CONFIG.AGENTS,
-  });
+  // Apenas para debug - pode ser removido depois
+  const { data: myAgentsData } = useMyAgents();
 
   // Handlers para as ações
   const handleCreateAgent = () => {
@@ -49,19 +43,23 @@ export default function AgentsScreen() {
   return (
     <div className="w-full min-h-full bg-gradient-to-br from-background via-background to-muted/5">
       <div className="w-full space-y-8 p-6">
-        {/* Welcome Section */}
-        <AgentsWelcomeSection agentsCount={agentsData?.length || 0} />
+        {/* Welcome Section - sempre visível */}
+        <AgentsWelcomeSection />
 
-        {/* Create Agent Section */}
+        {/* Debug info - pode ser removido */}
+        <div>
+          <p>Agents do usuário</p>
+          <pre>{JSON.stringify(myAgentsData, null, 2)}</pre>
+        </div>
+
+        {/* Create Agent Section - sempre visível */}
         <CreateAgentSection
           onCreateAgent={handleCreateAgent}
           onViewModels={handleViewModels}
         />
 
-        {/* Agents Grid */}
-        <AgentsGrid
-          agents={agentsData}
-          isLoading={isLoading}
+        {/* Agents Grid - com Suspense interno */}
+        <AgentsGridWithSuspense
           onCreateFirstAgent={handleCreateFirstAgent}
           onConfigureAgent={handleConfigureAgent}
         />
