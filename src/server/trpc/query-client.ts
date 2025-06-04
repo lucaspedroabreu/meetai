@@ -10,6 +10,9 @@ export function makeQueryClient() {
       queries: {
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
         retry: (failureCount, error) => {
           if (error && typeof error === "object" && "status" in error) {
             const status = error.status as number;
@@ -20,8 +23,6 @@ export function makeQueryClient() {
           return failureCount < 3;
         },
         retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
       },
       mutations: {
         onError: (error) => {
