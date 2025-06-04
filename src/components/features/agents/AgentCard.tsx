@@ -1,19 +1,21 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Bot, Settings } from "lucide-react";
+import { Bot, Settings, Loader2 } from "lucide-react";
 import type { Agent } from "./types";
 
 interface AgentCardProps {
   agent: Agent;
   index: number;
   onConfigure?: (agent: Agent) => void;
+  isConfiguring?: boolean;
 }
 
 export default function AgentCard({
   agent,
   index,
   onConfigure,
+  isConfiguring = false,
 }: AgentCardProps) {
   return (
     <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-6 hover:bg-card/70 transition-all duration-200 hover:border-blue-200/50">
@@ -42,8 +44,13 @@ export default function AgentCard({
               variant="ghost"
               size="sm"
               onClick={() => onConfigure?.(agent)}
+              disabled={isConfiguring}
             >
-              <Settings className="w-4 h-4 mr-1" />
+              {isConfiguring ? (
+                <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+              ) : (
+                <Settings className="w-4 h-4 mr-1" />
+              )}
               Configurar
             </Button>
           </div>
