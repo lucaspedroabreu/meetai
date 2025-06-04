@@ -71,166 +71,104 @@ const AmbientOrbs = memo(
 
 AmbientOrbs.displayName = "AmbientOrbs";
 
-// Tipo para as partículas
-interface Particle {
+// Tipo para as partículas MÁGICAS ✨
+interface MagicalParticle {
   id: number;
   left: string;
   top: string;
   delay: string;
   duration: string;
+  size: string;
+  opacity: string;
+  color: string;
+  blur: string;
+  drift: string;
 }
 
-// Função para gerar partículas aleatórias
-const generateRandomParticles = (count: number = 20): Particle[] => {
+// Função para gerar partículas MÁGICAS aleatórias ✨
+const generateMagicalParticles = (count: number = 35): MagicalParticle[] => {
+  // PALETA MONOCROMÁTICA VIOLETA/ROXO 💜
+  const colors = [
+    "bg-violet-200",
+    "bg-violet-300",
+    "bg-purple-200",
+    "bg-purple-300",
+    "bg-indigo-200",
+    "bg-indigo-300",
+  ];
+
   return Array.from({ length: count }, (_, i) => ({
     id: i + 1,
     left: `${Math.random() * 100}%`,
     top: `${Math.random() * 100}%`,
-    delay: `${Math.random() * 10}s`,
-    duration: `${10 + Math.random() * 20}s`,
+    delay: `${Math.random() * 15}s`,
+    duration: `${8 + Math.random() * 25}s`,
+    // TAMANHOS MENORES E MAIS SUTIS PARA PARTÍCULAS
+    size:
+      Math.random() > 0.8
+        ? "w-1 h-1"
+        : Math.random() > 0.5
+        ? "w-0.5 h-0.5"
+        : "w-px h-px",
+    opacity:
+      Math.random() > 0.6
+        ? "opacity-60"
+        : Math.random() > 0.3
+        ? "opacity-40"
+        : "opacity-20",
+    color: colors[Math.floor(Math.random() * colors.length)],
+    blur: Math.random() > 0.7 ? "blur-sm" : "",
+    drift: `${(Math.random() - 0.5) * 40}px`, // Movimento horizontal suave
   }));
-};
-
-// Função para obter partículas da sessão (ou gerar novas)
-const getSessionParticles = (): Particle[] => {
-  // Verificar se estamos no cliente
-  if (typeof window === "undefined") {
-    return generateRandomParticles(); // SSR fallback
-  }
-
-  try {
-    const stored = sessionStorage.getItem("floating-particles");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      // Validar se os dados estão no formato correto
-      if (
-        Array.isArray(parsed) &&
-        parsed.length > 0 &&
-        parsed[0].id !== undefined
-      ) {
-        return parsed;
-      }
-    }
-  } catch (error) {
-    console.warn("Erro ao carregar partículas da sessão:", error);
-  }
-
-  // Gerar novas partículas e salvar na sessão
-  const newParticles = generateRandomParticles();
-  try {
-    sessionStorage.setItem("floating-particles", JSON.stringify(newParticles));
-  } catch (error) {
-    console.warn("Erro ao salvar partículas na sessão:", error);
-  }
-
-  return newParticles;
-};
-
-// Função utilitária para regenerar partículas (útil para debug ou preferências do usuário)
-export const regenerateParticles = (): Particle[] => {
-  if (typeof window === "undefined") return [];
-
-  const newParticles = generateRandomParticles();
-  try {
-    sessionStorage.setItem("floating-particles", JSON.stringify(newParticles));
-    // Disparar evento customizado para notificar componentes que as partículas mudaram
-    window.dispatchEvent(
-      new CustomEvent("particles-regenerated", { detail: newParticles })
-    );
-  } catch (error) {
-    console.warn("Erro ao regenerar partículas:", error);
-  }
-  return newParticles;
 };
 
 const FloatingParticles = memo(() => {
   const [state, setState] = useState<{
     isMounted: boolean;
-    particles: Particle[];
+    particles: MagicalParticle[];
   }>({
     isMounted: false,
     particles: [],
   });
 
   useEffect(() => {
-    // Carregar partículas em uma única atualização de estado
-    let loadedParticles: Particle[] = [];
-
-    // Tentar carregar do sessionStorage ou gerar novas
-    try {
-      const stored = sessionStorage.getItem("floating-particles");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (
-          Array.isArray(parsed) &&
-          parsed.length > 0 &&
-          parsed[0].id !== undefined
-        ) {
-          loadedParticles = parsed;
-        }
-      }
-    } catch (error) {
-      console.warn("Erro ao carregar partículas da sessão:", error);
-    }
-
-    // Se não carregou partículas válidas, gerar novas
-    if (loadedParticles.length === 0) {
-      loadedParticles = generateRandomParticles();
-      try {
-        sessionStorage.setItem(
-          "floating-particles",
-          JSON.stringify(loadedParticles)
-        );
-      } catch (error) {
-        console.warn("Erro ao salvar partículas na sessão:", error);
-      }
-    }
+    // Gerar partículas aleatórias diretamente no cliente
+    const newParticles = generateMagicalParticles();
 
     // Atualizar estado de uma só vez
     setState({
       isMounted: true,
-      particles: loadedParticles,
+      particles: newParticles,
     });
-
-    // Listener para regeneração de partículas
-    const handleParticlesRegenerated = (event: CustomEvent) => {
-      setState((prevState) => ({
-        ...prevState,
-        particles: event.detail,
-      }));
-    };
-
-    window.addEventListener(
-      "particles-regenerated",
-      handleParticlesRegenerated as EventListener
-    );
-
-    return () => {
-      window.removeEventListener(
-        "particles-regenerated",
-        handleParticlesRegenerated as EventListener
-      );
-    };
   }, []);
 
   // Não renderizar no servidor ou antes do componente estar montado
   if (!state.isMounted || state.particles.length === 0) return null;
 
   return (
-    <>
+    <div className="contents" suppressHydrationWarning={true}>
       {state.particles.map((particle) => (
         <div
           key={particle.id}
-          className="absolute w-1 h-1 bg-white rounded-full opacity-30 animate-pulse"
-          style={{
-            left: particle.left,
-            top: particle.top,
-            animationDelay: particle.delay,
-            animationDuration: particle.duration,
-          }}
+          className={cn(
+            "absolute rounded-full animate-magical-float",
+            particle.size,
+            particle.opacity,
+            particle.color,
+            particle.blur
+          )}
+          style={
+            {
+              left: particle.left,
+              top: particle.top,
+              animationDelay: particle.delay,
+              animationDuration: particle.duration,
+              "--drift-distance": particle.drift,
+            } as React.CSSProperties & { "--drift-distance": string }
+          }
         />
       ))}
-    </>
+    </div>
   );
 });
 
@@ -239,32 +177,195 @@ FloatingParticles.displayName = "FloatingParticles";
 // NOVO: Componente de partículas estáticas específicas para o dashboard
 // Estas partículas são fixas e não causam problemas de hidratação
 
-const STATIC_PARTICLES = [
-  { id: 1, left: "10%", top: "20%", delay: "0s", duration: "15s" },
-  { id: 2, left: "80%", top: "10%", delay: "2s", duration: "18s" },
-  { id: 3, left: "20%", top: "70%", delay: "4s", duration: "12s" },
-  { id: 4, left: "70%", top: "60%", delay: "1s", duration: "20s" },
-  { id: 5, left: "40%", top: "30%", delay: "3s", duration: "16s" },
-  { id: 6, left: "90%", top: "80%", delay: "5s", duration: "14s" },
-  { id: 7, left: "15%", top: "90%", delay: "2.5s", duration: "17s" },
-  { id: 8, left: "60%", top: "25%", delay: "4.5s", duration: "13s" },
-  { id: 9, left: "30%", top: "85%", delay: "1.5s", duration: "19s" },
-  { id: 10, left: "85%", top: "40%", delay: "3.5s", duration: "15s" },
+const MAGICAL_DASHBOARD_PARTICLES = [
+  {
+    id: 1,
+    left: "10%",
+    top: "20%",
+    delay: "0s",
+    duration: "15s",
+    size: "w-1 h-1",
+    color: "bg-violet-300",
+    glow: true,
+  },
+  {
+    id: 2,
+    left: "80%",
+    top: "10%",
+    delay: "2s",
+    duration: "18s",
+    size: "w-0.5 h-0.5",
+    color: "bg-purple-200",
+    glow: false,
+  },
+  {
+    id: 3,
+    left: "20%",
+    top: "70%",
+    delay: "4s",
+    duration: "12s",
+    size: "w-1 h-1",
+    color: "bg-indigo-300",
+    glow: true,
+  },
+  {
+    id: 4,
+    left: "70%",
+    top: "60%",
+    delay: "1s",
+    duration: "20s",
+    size: "w-px h-px",
+    color: "bg-violet-200",
+    glow: false,
+  },
+  {
+    id: 5,
+    left: "40%",
+    top: "30%",
+    delay: "3s",
+    duration: "16s",
+    size: "w-0.5 h-0.5",
+    color: "bg-purple-300",
+    glow: true,
+  },
+  {
+    id: 6,
+    left: "90%",
+    top: "80%",
+    delay: "5s",
+    duration: "14s",
+    size: "w-px h-px",
+    color: "bg-indigo-200",
+    glow: false,
+  },
+  {
+    id: 7,
+    left: "15%",
+    top: "90%",
+    delay: "2.5s",
+    duration: "17s",
+    size: "w-1 h-1",
+    color: "bg-violet-300",
+    glow: true,
+  },
+  {
+    id: 8,
+    left: "60%",
+    top: "25%",
+    delay: "4.5s",
+    duration: "13s",
+    size: "w-0.5 h-0.5",
+    color: "bg-purple-200",
+    glow: false,
+  },
+  {
+    id: 9,
+    left: "30%",
+    top: "85%",
+    delay: "1.5s",
+    duration: "19s",
+    size: "w-0.5 h-0.5",
+    color: "bg-indigo-300",
+    glow: true,
+  },
+  {
+    id: 10,
+    left: "85%",
+    top: "40%",
+    delay: "3.5s",
+    duration: "15s",
+    size: "w-px h-px",
+    color: "bg-violet-200",
+    glow: false,
+  },
+  {
+    id: 11,
+    left: "5%",
+    top: "50%",
+    delay: "6s",
+    duration: "22s",
+    size: "w-1 h-1",
+    color: "bg-purple-300",
+    glow: true,
+  },
+  {
+    id: 12,
+    left: "95%",
+    top: "30%",
+    delay: "1.8s",
+    duration: "16s",
+    size: "w-px h-px",
+    color: "bg-indigo-200",
+    glow: false,
+  },
+  {
+    id: 13,
+    left: "45%",
+    top: "15%",
+    delay: "3.2s",
+    duration: "14s",
+    size: "w-0.5 h-0.5",
+    color: "bg-violet-300",
+    glow: true,
+  },
+  {
+    id: 14,
+    left: "25%",
+    top: "45%",
+    delay: "5.5s",
+    duration: "18s",
+    size: "w-px h-px",
+    color: "bg-purple-200",
+    glow: false,
+  },
+  {
+    id: 15,
+    left: "75%",
+    top: "85%",
+    delay: "2.8s",
+    duration: "21s",
+    size: "w-0.5 h-0.5",
+    color: "bg-indigo-300",
+    glow: true,
+  },
 ];
 
 const DashboardParticles = memo(() => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <>
-      {STATIC_PARTICLES.map((particle) => (
+      {MAGICAL_DASHBOARD_PARTICLES.map((particle) => (
         <div
           key={particle.id}
-          className="absolute w-1 h-1 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full opacity-40 animate-pulse"
-          style={{
-            left: particle.left,
-            top: particle.top,
-            animationDelay: particle.delay,
-            animationDuration: particle.duration,
-          }}
+          className={cn(
+            "absolute rounded-full animate-magical-float",
+            particle.size,
+            particle.color,
+            "opacity-50",
+            particle.glow && "shadow-lg filter blur-[0.5px]"
+          )}
+          style={
+            {
+              left: particle.left,
+              top: particle.top,
+              animationDelay: particle.delay,
+              animationDuration: particle.duration,
+              "--drift-distance": isClient
+                ? `${(Math.random() - 0.5) * 25}px`
+                : "0px",
+              ...(particle.glow && {
+                filter: "brightness(1.2) blur(0.5px)",
+                boxShadow:
+                  "0 0 8px rgba(167, 139, 250, 0.4), 0 0 16px rgba(139, 92, 246, 0.2)",
+              }),
+            } as React.CSSProperties & { "--drift-distance": string }
+          }
+          suppressHydrationWarning
         />
       ))}
     </>
