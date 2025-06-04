@@ -2,7 +2,6 @@ import { eq } from "drizzle-orm";
 import { baseProcedure, protectedProcedure, createTRPCRouter } from "../init";
 import { agents as agentsTable } from "@/server/db/schemas/agents";
 import { z } from "zod";
-
 export const agentsRouter = createTRPCRouter({
   // Público - listar todos os agents (sem dados privados)
   getMany: baseProcedure.query(async ({ ctx }) => {
