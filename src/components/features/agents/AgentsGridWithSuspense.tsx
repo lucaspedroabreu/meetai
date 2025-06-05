@@ -23,9 +23,14 @@ const AgentsGridContent = ({
 }: AgentsGridContentProps) => {
   const { data: agentsData } = useAllAgents();
 
+  // Se não há dados, não precisa renderizar AgentsGrid
+  if (!agentsData) {
+    return null;
+  }
+
   return (
     <AgentsGrid
-      agents={agentsData}
+      agents={agentsData as Agent[]}
       onCreateFirstAgent={onCreateFirstAgent}
       onConfigureAgent={onConfigureAgent}
       onRetry={onRetry}

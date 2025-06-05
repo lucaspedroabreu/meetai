@@ -15,6 +15,13 @@
       "when": 1748963535888,
       "tag": "0001_moaning_dreadnoughts",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749154765891,
+      "tag": "0002_green_spacker_dave",
+      "breakpoints": true
     }
   ]
 }

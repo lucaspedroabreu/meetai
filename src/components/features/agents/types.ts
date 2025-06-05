@@ -1,10 +1,19 @@
 // Types for the agents feature
 export interface Agent {
   id: string | number;
-  name?: string;
+  name: string;
+  instructions: string;
   description?: string;
   status?: "active" | "inactive";
   model?: string;
+
+  // Avatar fields
+  avatarType?: "icon" | "unsplash";
+  avatarIcon?: string; // ID of the selected icon (e.g., 'bot', 'brain', etc.)
+  avatarGradient?: string; // ID of the gradient (e.g., 'blue-purple')
+  avatarImageUrl?: string; // URL for custom or Unsplash images
+
+  // Timestamps
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }

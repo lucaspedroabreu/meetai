@@ -13,8 +13,9 @@ export { useAllAgents, useMyAgents } from "../../../hooks/useAgentsData";
 export { default as AgentsWelcomeSection } from "./AgentsWelcomeSection";
 export { AgentsCount } from "./AgentsCount";
 
-// Create Agent Section
-export { default as CreateAgentSection } from "./CreateAgentSection";
+// Agent Form and Dialog
+export { default as AgentForm } from "./AgentForm";
+export { default as NewAgentsDialog } from "./NewAgentsDialog";
 
 // Agents Grid and Components
 export { default as AgentsGrid } from "./AgentsGrid";

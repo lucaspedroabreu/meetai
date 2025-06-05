@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "simplebar-react/dist/simplebar.min.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -716,6 +717,140 @@
 
   .pr-safe-right {
     padding-right: var(--spacing-safe-right);
+  }
+
+  /* SIMPLEBAR CUSTOM STYLES */
+  /* Customização profissional do scrollbar SimpleBar */
+
+  .simplebar-scrollbar::before {
+    background: linear-gradient(
+      to bottom,
+      var(--color-brand-primary),
+      var(--color-brand-secondary)
+    ) !important;
+    border-radius: 8px !important;
+    opacity: 0.8 !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .simplebar-scrollbar.simplebar-hover::before,
+  .simplebar-scrollbar:hover::before {
+    opacity: 1 !important;
+    background: linear-gradient(
+      to bottom,
+      var(--color-brand-primary),
+      var(--color-brand-tertiary)
+    ) !important;
+  }
+
+  .simplebar-track.simplebar-vertical {
+    background: hsl(var(--muted) / 0.3) !important;
+    border-radius: 8px !important;
+    width: 8px !important;
+    margin: 4px !important;
+  }
+
+  .simplebar-track.simplebar-horizontal {
+    background: hsl(var(--muted) / 0.3) !important;
+    border-radius: 8px !important;
+    height: 8px !important;
+    margin: 4px !important;
+  }
+
+  /* Dark mode adjustments */
+  .dark .simplebar-track {
+    background: hsl(var(--border) / 0.5) !important;
+  }
+
+  .dark .simplebar-scrollbar::before {
+    background: linear-gradient(
+      to bottom,
+      var(--color-brand-primary),
+      var(--color-brand-secondary)
+    ) !important;
+    opacity: 0.9 !important;
+  }
+
+  /* Animation on scroll start/end */
+  .simplebar-scrollbar {
+    transition: opacity 0.3s ease !important;
+  }
+
+  /* Smoother scrolling experience */
+  .simplebar-content-wrapper {
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .simplebar-content-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  /* Hide close button in dialogs */
+  .hide-close-button button[data-dialog-close] {
+    display: none !important;
+  }
+
+  .hide-close-button [data-radix-dialog-close] {
+    display: none !important;
+  }
+
+  /* Mais seletores específicos para o botão de fechar */
+  .hide-close-button
+    [data-radix-dialog-overlay]
+    ~ [data-radix-dialog-content]
+    button:first-of-type {
+    display: none !important;
+  }
+
+  .hide-close-button [role="dialog"] > button:first-child {
+    display: none !important;
+  }
+
+  .hide-close-button [role="dialog"] > button[aria-label*="Close"],
+  .hide-close-button [role="dialog"] > button[aria-label*="close"],
+  .hide-close-button [role="dialog"] > button[title*="Close"],
+  .hide-close-button [role="dialog"] > button[title*="close"] {
+    display: none !important;
+  }
+
+  /* Seletor mais específico baseado na posição */
+  .hide-close-button
+    [data-radix-dialog-content]
+    > button:last-child:not([type="submit"]):not([type="button"]) {
+    display: none !important;
+  }
+
+  /* Esconder qualquer botão com X ou × */
+  .hide-close-button button:has(svg):not(.custom-button):not([data-keep]) {
+    display: none !important;
+  }
+
+  .hide-close-button button > svg[width="15"][height="15"] {
+    display: none !important;
+  }
+
+  .hide-close-button button > svg[class*="h-4"][class*="w-4"] {
+    display: none !important;
+  }
+
+  /* Seletor super agressivo para esconder botão X */
+  .hide-close-button
+    [data-radix-dialog-content]
+    button:not([data-keep]):not(.custom-button) {
+    display: none !important;
+  }
+
+  .hide-close-button [data-radix-dialog-content] > button {
+    display: none !important;
+  }
+
+  /* Esconder por posição absoluta típica do botão close */
+  .hide-close-button button[class*="absolute"][class*="right"][class*="top"] {
+    display: none !important;
+  }
+
+  .hide-close-button .absolute.right-4.top-4 {
+    display: none !important;
   }
 }
 
