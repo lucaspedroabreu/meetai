@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 // cache removido - não é seguro para contextos com dados de usuário
 import superjson from "superjson";
 import { headers } from "next/headers";
@@ -35,13 +35,7 @@ export const createTRPCContext = async () => {
     user:
       isValid && session?.user
         ? {
-            id: session.user.id,
-            email: session.user.email,
-            name: session.user.name,
-            image: session.user.image,
-            emailVerified: session.user.emailVerified,
-            createdAt: session.user.createdAt,
-            updatedAt: session.user.updatedAt,
+            ...session.user,
           }
         : null,
 
@@ -54,21 +48,6 @@ export const createTRPCContext = async () => {
       contentType: reqHeaders.get("content-type"),
       origin: reqHeaders.get("origin"),
       referer: reqHeaders.get("referer"),
-    },
-
-    // Métodos auxiliares
-    requireAuth: () => {
-      if (!isValid || !session?.user) {
-        throw new Error("Autenticação necessária para acessar este recurso");
-      }
-      return session.user;
-    },
-
-    requireRole: (_requiredRole: string) => {
-      if (!isValid || !session?.user) {
-        throw new Error("Autenticação necessária para acessar este recurso");
-      }
-      return session.user;
     },
 
     // Logs estruturados
@@ -104,11 +83,17 @@ export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
 export const baseProcedure = t.procedure;
 
+// Procedures públicas (sem validação de autenticação)
+export const publicProcedure = baseProcedure;
+
 // Procedures com validação de autenticação
 export const protectedProcedure = baseProcedure.use(({ ctx, next }) => {
   // Validar se está autenticado
   if (!ctx.isAuthenticated || !ctx.user) {
-    throw new Error("Você precisa estar logado para acessar este recurso");
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Você precisa estar logado para acessar este recurso",
+    });
   }
 
   return next({
