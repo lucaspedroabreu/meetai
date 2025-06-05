@@ -3,7 +3,7 @@
 import React, { useState, memo } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Search as SearchIcon, Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCommandPalette } from "@/hooks/useCommandPalette";
@@ -24,28 +24,27 @@ const getRouteTitle = (pathname: string): string => {
   return routeMap[pathname] || "Dashboard";
 };
 
-// Componente mobile sidebar trigger com feedback tátil
+// Componente mobile sidebar trigger customizado com ícone de menu hambúrguer
 const MobileSidebarTrigger = () => {
   const [isPressed, setIsPressed] = useState(false);
+  const { toggleSidebar } = useSidebar();
 
   return (
     <Button
-      asChild
       variant="ghost"
       size="icon"
       className="md:hidden h-11 w-11 text-muted-foreground hover:text-foreground hover:bg-violet-500/10 transition-all duration-200 active:scale-95"
+      onClick={toggleSidebar}
       onMouseDown={() => setIsPressed(true)}
       onMouseUp={() => setIsPressed(false)}
       onMouseLeave={() => setIsPressed(false)}
     >
-      <SidebarTrigger>
-        <Menu
-          className={`h-5 w-5 transition-transform duration-200 ${
-            isPressed ? "scale-90" : "scale-100"
-          }`}
-        />
-        <span className="sr-only">Abrir menu</span>
-      </SidebarTrigger>
+      <Menu
+        className={`h-5 w-5 transition-transform duration-200 ${
+          isPressed ? "scale-90" : "scale-100"
+        }`}
+      />
+      <span className="sr-only">Abrir menu</span>
     </Button>
   );
 };
@@ -106,11 +105,11 @@ const DashboardHeader = memo(function DashboardHeader() {
           <>
             {/* Lado esquerdo: Sidebar trigger + Search */}
             <div className="flex items-center gap-2">
-              <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground hover:bg-violet-500/10 transition-colors" />
+              <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground hover:bg-violet-500/15 transition-colors cursor-pointer" />
 
               {/* Botão de pesquisa completo */}
               <Button
-                className="justify-start font-normal text-muted-foreground hover:text-foreground hover:bg-violet-500/5 border-border/20 transition-all duration-200 h-9 w-[240px] gap-2"
+                className="cursor-pointer justify-start font-normal text-muted-foreground hover:text-foreground hover:bg-violet-500/15 border-border/20 transition-all duration-200 h-9 w-[240px] gap-2"
                 variant="ghost"
                 size="icon"
                 onClick={() => setCommandPaletteOpen(true)}
@@ -118,7 +117,7 @@ const DashboardHeader = memo(function DashboardHeader() {
                 <SearchIcon className="h-4 w-4 flex-shrink-0" />
                 <span>Pesquisar</span>
                 {/* Container com largura fixa para evitar layout shift */}
-                <div className="ml-auto w-[52px] flex justify-end">
+                <div className="ml-auto w-[52px] flex justify-end bg-transparent">
                   <kbd
                     className={`pointer-events-none inline-flex h-5 select-none 
                     items-center gap-1 rounded border border-border/40 bg-muted/50 px-1.5 font-mono text-[10px] 

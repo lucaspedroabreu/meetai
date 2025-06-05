@@ -593,6 +593,21 @@
     content: "";
     @apply absolute inset-0 rounded-full bg-red-500;
   }
+
+  button:not(:disabled):not([aria-disabled="true"]),
+  [role="button"]:not(:disabled):not([aria-disabled="true"]),
+  [role="menuitem"]:not(:disabled):not([aria-disabled="true"]),
+  [role="option"]:not(:disabled):not([aria-disabled="true"]),
+  [data-radix-collection-item]:not(:disabled):not([aria-disabled="true"]),
+  [cmdk-item]:not(:disabled):not([aria-disabled="true"]),
+  [data-slot="toggle"]:not(:disabled):not([aria-disabled="true"]),
+  [data-slot="sidebar-menu-button"]:not(:disabled):not([aria-disabled="true"]),
+  [data-slot="command-item"]:not(:disabled):not([aria-disabled="true"]),
+  [data-sidebar="menu-button"]:not(:disabled):not([aria-disabled="true"]),
+  [data-slot="sidebar-trigger"]:not(:disabled):not([aria-disabled="true"]),
+  .cursor-pointer:not(:disabled):not([aria-disabled="true"]) {
+    cursor: pointer !important;
+  }
 }
 
 @layer utilities {
@@ -1083,5 +1098,21 @@
     box-shadow: 0 0 20px rgba(167, 139, 250, 0.6),
       0 0 30px rgba(139, 92, 246, 0.4);
     filter: brightness(1.3);
+  }
+}
+
+@layer base {
+  button:not(:disabled):not([aria-disabled="true"]),
+  [role="button"]:not(:disabled):not([aria-disabled="true"]),
+  [role="menuitem"]:not(:disabled):not([aria-disabled="true"]),
+  [role="option"]:not(:disabled):not([aria-disabled="true"]),
+  [data-radix-collection-item]:not(:disabled):not([aria-disabled="true"]),
+  [cmdk-item]:not(:disabled):not([aria-disabled="true"]),
+  [data-slot="toggle"]:not(:disabled):not([aria-disabled="true"]),
+  [data-slot="sidebar-menu-button"]:not(:disabled):not([aria-disabled="true"]),
+  [data-slot="command-item"]:not(:disabled):not([aria-disabled="true"]),
+  [data-sidebar="menu-button"]:not(:disabled):not([aria-disabled="true"]),
+  [data-slot="sidebar-trigger"]:not(:disabled):not([aria-disabled="true"]) {
+    cursor: pointer !important;
   }
 }

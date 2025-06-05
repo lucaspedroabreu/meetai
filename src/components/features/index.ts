@@ -19,3 +19,6 @@ export * from "./brand";
 
 // Agents feature
 export * from "./agents";
+
+// Meetings feature
+export * from "./meetings";

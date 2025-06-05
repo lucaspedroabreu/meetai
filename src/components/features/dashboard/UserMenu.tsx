@@ -271,7 +271,7 @@ export const UserMenu = memo(({ user }: UserMenuProps) => {
     return (
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerTrigger asChild>
-          <SidebarMenuButton className="w-full h-14 justify-start gap-3 rounded-xl transition-all duration-200 hover:bg-white/10 hover:shadow-lg">
+          <SidebarMenuButton className="w-full h-14 justify-start gap-3 rounded-xl transition-all duration-200 hover:bg-white/10 hover:shadow-lg cursor-pointer">
             <UserAvatar initials={userInfo.initials} image={user?.image} />
             <div className="flex-1 text-left overflow-hidden">
               <div className="text-sm font-medium text-white truncate">
@@ -319,7 +319,7 @@ export const UserMenu = memo(({ user }: UserMenuProps) => {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton className="w-full h-14 justify-start gap-3 rounded-xl transition-all duration-200 hover:bg-white/10 hover:shadow-lg">
+        <SidebarMenuButton className="w-full h-14 justify-start gap-3 rounded-xl transition-all duration-200 hover:bg-white/10 hover:shadow-lg cursor-pointer">
           <UserAvatar initials={userInfo.initials} image={user?.image} />
           <div className="flex-1 text-left overflow-hidden">
             <div className="text-sm font-medium text-white truncate">
