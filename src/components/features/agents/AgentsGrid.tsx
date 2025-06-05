@@ -15,15 +15,6 @@ interface AgentsGridProps {
   onRetry?: () => void;
 }
 
-const AgentsHeader = () => (
-  <div className="mb-6">
-    <h3 className="text-2xl font-semibold mb-2">Seus Agentes</h3>
-    <p className="text-muted-foreground">
-      Visualize e gerencie todos os seus assistentes IA
-    </p>
-  </div>
-);
-
 export default function AgentsGrid({
   agents,
   isLoading,
@@ -35,13 +26,11 @@ export default function AgentsGrid({
   if (isLoading) {
     return (
       <div className="max-w-6xl mx-auto">
-        <AgentsHeader />
-
         <LoadingState
-          title="Carregando Agentes"
-          description="Estamos buscando seus assistentes IA personalizados..."
+          title="Carregando seus agentes..."
+          description="Aguarde enquanto buscamos seus assistentes IA"
           size="lg"
-          className="min-h-[400px]"
+          className="min-h-[300px]"
         />
       </div>
     );
@@ -50,10 +39,8 @@ export default function AgentsGrid({
   if (isError) {
     return (
       <div className="max-w-6xl mx-auto">
-        <AgentsHeader />
-
         <ErrorMessage
-          error="Erro ao carregar agentes. Verifique sua conexão e tente novamente."
+          error="Não foi possível carregar seus agentes. Verifique sua conexão e tente novamente."
           onRetry={onRetry}
           className="max-w-md mx-auto"
         />
@@ -61,24 +48,34 @@ export default function AgentsGrid({
     );
   }
 
+  if (!agents || agents.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <AgentsEmptyState onCreateFirstAgent={onCreateFirstAgent} />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto">
-      <AgentsHeader />
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-2">Seus Agentes</h2>
+        <p className="text-muted-foreground">
+          {agents.length} agente{agents.length !== 1 ? "s" : ""} configurado
+          {agents.length !== 1 ? "s" : ""}
+        </p>
+      </div>
 
-      {!agents || agents.length === 0 ? (
-        <AgentsEmptyState onCreateFirstAgent={onCreateFirstAgent} />
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {agents.map((agent, index) => (
-            <AgentCard
-              key={agent.id}
-              agent={agent}
-              index={index}
-              onConfigure={onConfigureAgent}
-            />
-          ))}
-        </div>
-      )}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {agents.map((agent, index) => (
+          <AgentCard
+            key={agent.id}
+            agent={agent}
+            index={index}
+            onConfigure={onConfigureAgent}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,26 +1,29 @@
 "use client";
 
-import { MeetAILogo } from "@/components/features/brand";
 import { useDashboardUser } from "@/components/layout/DashboardLayout";
 import { AgentsCount } from "./AgentsCount";
+import { Bot } from "lucide-react";
 
 export default function AgentsWelcomeSection() {
   const user = useDashboardUser();
 
   return (
-    <div className="text-center space-y-6">
+    <div className="text-center space-y-6 py-8">
       <div className="flex justify-center">
-        <MeetAILogo size={80} variant="gradient" animated={true} />
+        <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+          <Bot className="w-8 h-8 text-white" />
+        </div>
       </div>
 
-      <div className="space-y-4">
-        <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-foreground via-foreground to-violet-600 bg-clip-text text-transparent">
-          Seus Agentes IA{user?.name ? `, ${user.name}` : ""}!
+      <div className="space-y-3">
+        <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
+          Seus Agentes IA{user?.name ? `, ${user.name}` : ""}
         </h1>
-        <p className="text-lg text-muted-foreground">
-          Gerencie e configure seus assistentes de IA personalizados
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Gerencie e configure seus assistentes de IA personalizados para
+          automatizar tarefas e melhorar sua produtividade
         </p>
-        <div className="text-md text-muted-foreground">
+        <div className="text-sm text-muted-foreground">
           <AgentsCount />
         </div>
       </div>

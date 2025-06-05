@@ -11,20 +11,21 @@ export default function AgentsEmptyState({
   onCreateFirstAgent,
 }: AgentsEmptyStateProps) {
   return (
-    <div className="text-center py-12">
-      <div className="w-20 h-20 bg-muted/20 rounded-full flex items-center justify-center mx-auto mb-4">
-        <Bot className="w-10 h-10 text-muted-foreground" />
+    <div className="text-center py-16">
+      <div className="w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <Bot className="w-12 h-12 text-blue-600 dark:text-blue-400" />
       </div>
-      <h4 className="text-xl font-semibold mb-2">Nenhum agente criado ainda</h4>
-      <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-        Comece criando seu primeiro agente IA personalizado para automatizar
-        tarefas e melhorar sua produtividade.
+      <h3 className="text-2xl font-semibold mb-3">Ainda não há agentes</h3>
+      <p className="text-muted-foreground mb-8 max-w-md mx-auto leading-relaxed">
+        Crie seu primeiro agente IA para começar a automatizar tarefas e
+        aumentar sua produtividade.
       </p>
       <Button
-        className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+        size="lg"
+        className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg"
         onClick={onCreateFirstAgent}
       >
-        <Plus className="w-4 h-4 mr-2" />
+        <Plus className="w-5 h-5 mr-2" />
         Criar Primeiro Agente
       </Button>
     </div>
