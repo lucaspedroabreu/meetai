@@ -2,6 +2,8 @@ import { eq, and } from "drizzle-orm";
 import { baseProcedure, protectedProcedure, createTRPCRouter } from "../init";
 import { agents as agentsTable } from "@/server/db/schemas/agents";
 import { z } from "zod";
+import { assert, assertDefined, assertIsString } from "@/utils/error-handling";
+
 export const agentsRouter = createTRPCRouter({
   // Público - listar todos os agents (sem dados privados)
   getMany: baseProcedure.query(async ({ ctx }) => {
@@ -21,6 +23,11 @@ export const agentsRouter = createTRPCRouter({
 
   // Privado - listar agents do usuário logado
   getMyAgents: protectedProcedure.query(async ({ ctx }) => {
+    assertDefined(
+      ctx.user?.id,
+      "User ID deve estar definido para usuários autenticados"
+    );
+
     ctx.log("Listando agents do usuário", { userId: ctx.user.id });
 
     const agents = await ctx.db
@@ -40,6 +47,21 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      assertDefined(
+        ctx.user?.id,
+        "User ID deve estar definido para usuários autenticados"
+      );
+      assertIsString(input.name, "Nome do agent deve ser uma string");
+      assertIsString(input.instructions, "Instruções devem ser uma string");
+      assert(
+        input.name.trim().length > 0,
+        "Nome do agent não pode estar vazio"
+      );
+      assert(
+        input.instructions.length <= 500,
+        "Instruções não podem exceder 500 caracteres"
+      );
+
       ctx.log("Criando novo agent", {
         userId: ctx.user.id,
         agentName: input.name,
@@ -53,6 +75,7 @@ export const agentsRouter = createTRPCRouter({
         })
         .returning();
 
+      assertDefined(agent, "Agent criado deve retornar dados");
       return agent;
     }),
 
@@ -60,6 +83,13 @@ export const agentsRouter = createTRPCRouter({
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      assertDefined(
+        ctx.user?.id,
+        "User ID deve estar definido para usuários autenticados"
+      );
+      assertIsString(input.id, "ID do agent deve ser uma string");
+      assert(input.id.trim().length > 0, "ID do agent não pode estar vazio");
+
       ctx.log("Buscando agent por ID", {
         userId: ctx.user.id,
         agentId: input.id,
@@ -73,16 +103,16 @@ export const agentsRouter = createTRPCRouter({
         )
         .limit(1);
 
-      if (!agent) {
-        throw new Error(
-          "Agent não encontrado ou você não tem permissão para visualizá-lo"
-        );
-      }
+      assert(
+        agent,
+        "Agent não encontrado ou você não tem permissão para visualizá-lo"
+      );
 
-      // Verificar se o agent pertence ao usuário (se necessário)
-      if (agent.userId !== ctx.user.id) {
-        throw new Error("Você não tem permissão para visualizar este agent");
-      }
+      // Verificar se o agent pertence ao usuário (dupla verificação de segurança)
+      assert(
+        agent.userId === ctx.user.id,
+        "Você não tem permissão para visualizar este agent"
+      );
 
       return agent;
     }),
@@ -99,6 +129,21 @@ export const agentsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, ...updateData } = input;
 
+      assertDefined(
+        ctx.user?.id,
+        "User ID deve estar definido para usuários autenticados"
+      );
+      assertIsString(id, "ID do agent deve ser uma string");
+      assert(id.trim().length > 0, "ID do agent não pode estar vazio");
+
+      if (updateData.name !== undefined) {
+        assertIsString(updateData.name, "Nome do agent deve ser uma string");
+        assert(
+          updateData.name.trim().length > 0,
+          "Nome do agent não pode estar vazio"
+        );
+      }
+
       ctx.log("Atualizando agent", {
         userId: ctx.user.id,
         agentId: id,
@@ -111,11 +156,10 @@ export const agentsRouter = createTRPCRouter({
         .where(eq(agentsTable.id, id))
         .limit(1);
 
-      if (!existingAgent || existingAgent.userId !== ctx.user.id) {
-        throw new Error(
-          "Agent não encontrado ou você não tem permissão para editá-lo"
-        );
-      }
+      assert(
+        existingAgent && existingAgent.userId === ctx.user.id,
+        "Agent não encontrado ou você não tem permissão para editá-lo"
+      );
 
       // Atualizar
       const [updatedAgent] = await ctx.db
@@ -127,6 +171,7 @@ export const agentsRouter = createTRPCRouter({
         .where(eq(agentsTable.id, id))
         .returning();
 
+      assertDefined(updatedAgent, "Agent atualizado deve retornar dados");
       return updatedAgent;
     }),
 
@@ -134,6 +179,13 @@ export const agentsRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      assertDefined(
+        ctx.user?.id,
+        "User ID deve estar definido para usuários autenticados"
+      );
+      assertIsString(input.id, "ID do agent deve ser uma string");
+      assert(input.id.trim().length > 0, "ID do agent não pode estar vazio");
+
       ctx.log("Deletando agent", {
         userId: ctx.user.id,
         agentId: input.id,
@@ -146,11 +198,10 @@ export const agentsRouter = createTRPCRouter({
         .where(eq(agentsTable.id, input.id))
         .limit(1);
 
-      if (!existingAgent || existingAgent.userId !== ctx.user.id) {
-        throw new Error(
-          "Agent não encontrado ou você não tem permissão para deletá-lo"
-        );
-      }
+      assert(
+        existingAgent && existingAgent.userId === ctx.user.id,
+        "Agent não encontrado ou você não tem permissão para deletá-lo"
+      );
 
       await ctx.db.delete(agentsTable).where(eq(agentsTable.id, input.id));
 

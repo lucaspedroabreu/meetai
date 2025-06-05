@@ -3,6 +3,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import superjson from "superjson";
+import { isNumber } from "@/utils/error-handling";
 
 export function makeQueryClient() {
   return new QueryClient({
@@ -15,8 +16,11 @@ export function makeQueryClient() {
         refetchOnReconnect: false,
         retry: (failureCount, error) => {
           if (error && typeof error === "object" && "status" in error) {
-            const status = error.status as number;
-            if (status >= 400 && status < 500) {
+            if (
+              isNumber(error.status) &&
+              error.status >= 400 &&
+              error.status < 500
+            ) {
               return false;
             }
           }

@@ -1,10 +1,11 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { createTRPCContext } from "@/server/trpc/init";
 import { appRouter } from "@/server/trpc/routers/_app";
+import { tryCatch, assertIsString } from "@/utils/error-handling";
 
 const handler = async (req: Request) => {
-  try {
-    const response = await fetchRequestHandler({
+  const { data: response, error } = await tryCatch(
+    fetchRequestHandler({
       endpoint: "/api/trpc",
       req,
       router: appRouter,
@@ -17,17 +18,10 @@ const handler = async (req: Request) => {
               );
             }
           : undefined,
-    });
+    })
+  );
 
-    // Adicionar cabeçalhos de segurança
-    response.headers.set("Content-Security-Policy", "default-src 'self'");
-    response.headers.set("X-Content-Type-Options", "nosniff");
-    response.headers.set("X-Frame-Options", "DENY");
-    response.headers.set("X-XSS-Protection", "1; mode=block");
-    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-
-    return response;
-  } catch (error) {
+  if (error) {
     // Log do erro no desenvolvimento
     if (process.env.NODE_ENV === "development") {
       console.error("❌ tRPC Handler Error:", error);
@@ -39,7 +33,7 @@ const handler = async (req: Request) => {
         error: {
           message:
             process.env.NODE_ENV === "development"
-              ? (error as Error).message
+              ? error.message
               : "Internal Server Error",
         },
       }),
@@ -56,6 +50,15 @@ const handler = async (req: Request) => {
       }
     );
   }
+
+  // Adicionar cabeçalhos de segurança
+  response.headers.set("Content-Security-Policy", "default-src 'self'");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-XSS-Protection", "1; mode=block");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+
+  return response;
 };
 
 export { handler as GET, handler as POST };

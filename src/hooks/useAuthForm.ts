@@ -9,6 +9,12 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z, type ZodObject } from "zod";
+import {
+  assert,
+  assertDefined,
+  assertIsString,
+  isDefined,
+} from "@/utils/error-handling";
 
 /**
  * Hook para formulários de autenticação com feedback visual em tempo real
@@ -153,6 +159,24 @@ export function useAuthForm<T extends FieldValues>({
   confirmField,
   referenceField,
 }: UseAuthFormOptions<T>): UseAuthFormReturn<T> {
+  // Validações de parâmetros - assertions apropriadas aqui pois queremos falha rápida
+  assertDefined(schema, "Schema é obrigatório");
+  assertDefined(fields, "Fields array é obrigatório");
+  assert(fields.length > 0, "Fields array não pode estar vazio");
+  assertIsString(mode, "Mode deve ser uma string");
+  assert(
+    mode === "sign-in" || mode === "sign-up",
+    "Mode deve ser 'sign-in' ou 'sign-up'"
+  );
+
+  // Se confirmField for fornecido, referenceField também deve ser
+  if (confirmField !== undefined) {
+    assertDefined(
+      referenceField,
+      "Se confirmField for fornecido, referenceField também deve ser"
+    );
+  }
+
   /**
    * Função auxiliar para criar objetos de estado inicial
    * Por que função: Elimina repetição na criação de estados booleanos
@@ -336,11 +360,16 @@ export function useAuthForm<T extends FieldValues>({
         } else {
           // Validação padrão usando schema Zod - campo específico para feedback instantâneo
           const schemaToUse = baseSchema || schema;
+
+          // Usar type guard aqui pois pode ser um caso válido não ter fieldSchema
           const fieldSchema = (schemaToUse as ZodObject<T>).shape[
             fieldName as string
           ];
-          await fieldSchema.parseAsync(value);
-          setValidFields((prev) => ({ ...prev, [fieldName]: true }));
+
+          if (isDefined(fieldSchema)) {
+            await fieldSchema.parseAsync(value);
+            setValidFields((prev) => ({ ...prev, [fieldName]: true }));
+          }
         }
       } catch {
         setValidFields((prev) => ({ ...prev, [fieldName]: false }));

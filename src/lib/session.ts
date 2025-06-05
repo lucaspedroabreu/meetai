@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { tryCatch, isDefined, isString } from "@/utils/error-handling";
 
 /**
  * Tipos nativos do Better Auth - usando o tipo real da API
@@ -28,28 +29,29 @@ export interface SessionValidationResult {
 export async function getAndValidateSession(
   headers: Headers
 ): Promise<SessionValidationResult> {
-  try {
-    // Chamada robusta usando a API nativa do Better Auth
-    const sessionResponse = await auth.api.getSession({ headers });
+  const { data: sessionResponse, error } = await tryCatch(
+    auth.api.getSession({ headers })
+  );
 
-    // Validação usando os tipos nativos
-    const isValid = validateSessionResponse(sessionResponse);
-
-    return {
-      session: isValid ? sessionResponse : null,
-      isValid,
-      error: null,
-    };
-  } catch (error) {
+  if (error) {
     // Log do erro para debugging (em produção, usar serviço de logging)
     console.error("🚨 Erro ao obter sessão:", error);
 
     return {
       session: null,
       isValid: false,
-      error: error as Error,
+      error,
     };
   }
+
+  // Validação usando os tipos nativos
+  const isValid = validateSessionResponse(sessionResponse);
+
+  return {
+    session: isValid ? sessionResponse : null,
+    isValid,
+    error: null,
+  };
 }
 
 /**
@@ -66,6 +68,18 @@ export async function getAndValidateSession(
 function validateSessionResponse(sessionResponse: SessionResponse): boolean {
   // Verificação básica: resposta existe e tem usuário com email e id
   if (!sessionResponse?.user?.email || !sessionResponse?.user?.id) {
+    return false;
+  }
+
+  // Usar type guards para validação condicional - não queremos falhar rápido aqui
+  if (
+    !isDefined(sessionResponse.user.email) ||
+    !isString(sessionResponse.user.email)
+  ) {
+    return false;
+  }
+
+  if (!isDefined(sessionResponse.user.id)) {
     return false;
   }
 
