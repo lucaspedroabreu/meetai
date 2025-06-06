@@ -1,8 +1,52 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Bot, Settings, Loader2 } from "lucide-react";
+import {
+  Bot,
+  Settings,
+  Loader2,
+  Brain,
+  Cpu,
+  Sparkles,
+  Zap,
+  MessageSquare,
+  Lightbulb,
+  Cog,
+  Wand2,
+  Shield,
+  Rocket,
+  Heart,
+} from "lucide-react";
+import Image from "next/image";
 import type { Agent } from "./types";
+
+// Mapeamento dos ícones
+const ICON_COMPONENTS = {
+  bot: Bot,
+  brain: Brain,
+  cpu: Cpu,
+  sparkles: Sparkles,
+  zap: Zap,
+  message: MessageSquare,
+  lightbulb: Lightbulb,
+  cog: Cog,
+  wand: Wand2,
+  shield: Shield,
+  rocket: Rocket,
+  heart: Heart,
+} as const;
+
+// Mapeamento dos gradientes
+const GRADIENT_CLASSES = {
+  "blue-purple": "from-blue-500 to-purple-500",
+  "green-teal": "from-green-500 to-teal-500",
+  "orange-red": "from-orange-500 to-red-500",
+  "pink-purple": "from-pink-500 to-purple-500",
+  "indigo-blue": "from-indigo-500 to-blue-500",
+  "yellow-orange": "from-yellow-500 to-orange-500",
+  "cyan-blue": "from-cyan-500 to-blue-500",
+  "purple-pink": "from-purple-500 to-pink-500",
+} as const;
 
 interface AgentCardProps {
   agent: Agent;
@@ -23,8 +67,39 @@ export default function AgentCard({
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center shadow-sm">
-              <Bot className="w-6 h-6 text-white" />
+            {/* Avatar dinâmico baseado nos dados do agente */}
+            <div
+              className={`w-12 h-12 bg-gradient-to-br ${
+                agent.avatarType === "icon" && agent.avatarGradient
+                  ? GRADIENT_CLASSES[
+                      agent.avatarGradient as keyof typeof GRADIENT_CLASSES
+                    ] || "from-blue-500 to-purple-500"
+                  : "from-blue-500 to-purple-500"
+              } rounded-lg flex items-center justify-center shadow-sm overflow-hidden`}
+            >
+              {agent.avatarType === "unsplash" && agent.avatarImageUrl ? (
+                <Image
+                  src={agent.avatarImageUrl}
+                  alt={agent.name || "Agent"}
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-cover"
+                  unoptimized
+                />
+              ) : (
+                (() => {
+                  const IconComponent = agent.avatarIcon
+                    ? ICON_COMPONENTS[
+                        agent.avatarIcon as keyof typeof ICON_COMPONENTS
+                      ]
+                    : Bot;
+                  return IconComponent ? (
+                    <IconComponent className="w-6 h-6 text-white" />
+                  ) : (
+                    <Bot className="w-6 h-6 text-white" />
+                  );
+                })()
+              )}
             </div>
             <div>
               <h4 className="font-semibold text-lg leading-tight">

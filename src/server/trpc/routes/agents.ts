@@ -1,9 +1,13 @@
 import { eq, and } from "drizzle-orm";
 import { baseProcedure, protectedProcedure, createTRPCRouter } from "../init";
 import { agents as agentsTable } from "@/server/db/schemas/agents";
-import { z } from "zod";
 import { assert, assertDefined, assertIsString } from "@/utils/error-handling";
-import { insertAgentSchema } from "../modules/agents/schema";
+import {
+  insertAgentSchema,
+  updateAgentSchema,
+  getAgentByIdSchema,
+  deleteAgentSchema,
+} from "../modules/agents/schema";
 export const agentsRouter = createTRPCRouter({
   // Público - listar todos os agents (sem dados privados)
   getMany: baseProcedure.query(async ({ ctx }) => {
@@ -63,7 +67,7 @@ export const agentsRouter = createTRPCRouter({
 
   // Privado - obter agent específico (apenas se for do usuário)
   getById: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(getAgentByIdSchema)
     .query(async ({ ctx, input }) => {
       assertDefined(
         ctx.user?.id,
@@ -101,13 +105,7 @@ export const agentsRouter = createTRPCRouter({
 
   // Privado - atualizar agent
   update: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        name: z.string().min(1).max(100).optional(),
-        // outros campos...
-      })
-    )
+    .input(updateAgentSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...updateData } = input;
 
@@ -118,39 +116,31 @@ export const agentsRouter = createTRPCRouter({
       assertIsString(id, "ID do agent deve ser uma string");
       assert(id.trim().length > 0, "ID do agent não pode estar vazio");
 
-      if (updateData.name !== undefined) {
-        assertIsString(updateData.name, "Nome do agent deve ser uma string");
-        assert(
-          updateData.name.trim().length > 0,
-          "Nome do agent não pode estar vazio"
-        );
-      }
-
       ctx.log("Atualizando agent", {
         userId: ctx.user.id,
         agentId: id,
       });
 
-      // Primeiro verificar se o agent existe e pertence ao usuário
+      // Verificar se o agent existe e pertence ao usuário
       const [existingAgent] = await ctx.db
         .select()
         .from(agentsTable)
-        .where(eq(agentsTable.id, id))
+        .where(and(eq(agentsTable.id, id), eq(agentsTable.userId, ctx.user.id)))
         .limit(1);
 
       assert(
-        existingAgent && existingAgent.userId === ctx.user.id,
+        existingAgent,
         "Agent não encontrado ou você não tem permissão para editá-lo"
       );
 
-      // Atualizar
+      // Atualizar o agent (já garantido que pertence ao usuário)
       const [updatedAgent] = await ctx.db
         .update(agentsTable)
         .set({
           ...updateData,
           updatedAt: new Date(),
         })
-        .where(eq(agentsTable.id, id))
+        .where(and(eq(agentsTable.id, id), eq(agentsTable.userId, ctx.user.id)))
         .returning();
 
       assertDefined(updatedAgent, "Agent atualizado deve retornar dados");
@@ -159,7 +149,7 @@ export const agentsRouter = createTRPCRouter({
 
   // Privado - deletar agent
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(deleteAgentSchema)
     .mutation(async ({ ctx, input }) => {
       assertDefined(
         ctx.user?.id,
@@ -173,11 +163,13 @@ export const agentsRouter = createTRPCRouter({
         agentId: input.id,
       });
 
-      // Verificar se o agent pertence ao usuário antes de deletar
+      // Verificar se o agent existe e pertence ao usuário antes de deletar
       const [existingAgent] = await ctx.db
         .select()
         .from(agentsTable)
-        .where(eq(agentsTable.id, input.id))
+        .where(
+          and(eq(agentsTable.id, input.id), eq(agentsTable.userId, ctx.user.id))
+        )
         .limit(1);
 
       assert(
@@ -185,7 +177,12 @@ export const agentsRouter = createTRPCRouter({
         "Agent não encontrado ou você não tem permissão para deletá-lo"
       );
 
-      await ctx.db.delete(agentsTable).where(eq(agentsTable.id, input.id));
+      // Deletar o agent (já garantido que pertence ao usuário)
+      await ctx.db
+        .delete(agentsTable)
+        .where(
+          and(eq(agentsTable.id, input.id), eq(agentsTable.userId, ctx.user.id))
+        );
 
       return { success: true };
     }),

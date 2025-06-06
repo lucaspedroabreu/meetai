@@ -77,7 +77,7 @@ export const ResponsiveDialog = ({
           </DrawerTitle>
 
           {!hideHeader && title && (
-            <DrawerHeader className="text-left">
+            <DrawerHeader className="text-left flex-shrink-0">
               <DrawerTitle className="text-xl">{title}</DrawerTitle>
               {description && (
                 <DrawerDescription className="text-sm text-muted-foreground">
@@ -86,14 +86,11 @@ export const ResponsiveDialog = ({
               )}
             </DrawerHeader>
           )}
-          <CustomScrollbar
-            className="px-4 flex-1"
-            maxHeight="calc(90vh - 160px)"
-          >
+          <CustomScrollbar className="px-4 flex-1 min-h-0">
             {children}
           </CustomScrollbar>
           {footerContent && (
-            <div className="px-4 pb-4 border-t bg-background/98 backdrop-blur-md">
+            <div className="px-4 pb-4 border-t bg-background/98 backdrop-blur-md flex-shrink-0">
               {footerContent}
             </div>
           )}
@@ -105,7 +102,7 @@ export const ResponsiveDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={`${getDialogSize()} max-h-[90vh] flex flex-col p-0`}
+        className={`${getDialogSize()} max-h-[90vh] flex flex-col p-0 overflow-hidden`}
         hideCloseButton={hideCloseButton}
       >
         {/* Título sempre presente para acessibilidade */}
@@ -114,7 +111,7 @@ export const ResponsiveDialog = ({
         </DialogTitle>
 
         {!hideHeader && title && (
-          <DialogHeader className="p-6 pb-0">
+          <DialogHeader className="p-6 pb-0 flex-shrink-0">
             <DialogTitle className="text-xl">{title}</DialogTitle>
             {description && (
               <DialogDescription className="text-sm text-muted-foreground">
@@ -123,11 +120,11 @@ export const ResponsiveDialog = ({
             )}
           </DialogHeader>
         )}
-        <CustomScrollbar className="flex-1 p-6" maxHeight="calc(90vh - 140px)">
+        <CustomScrollbar className="flex-1 min-h-0 p-6">
           {children}
         </CustomScrollbar>
         {footerContent && (
-          <div className="p-6 pt-0 border-t bg-background/98 backdrop-blur-md shadow-xl">
+          <div className="p-6 pt-0 border-t bg-background/98 backdrop-blur-md shadow-xl flex-shrink-0">
             {footerContent}
           </div>
         )}

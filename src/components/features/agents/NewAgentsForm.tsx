@@ -190,7 +190,7 @@ const GRADIENT_COLORS: Record<string, { from: string; to: string }> = {
   "purple-pink": { from: "from-purple-500", to: "to-pink-500" },
 };
 
-const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
+const NewAgentsForm = forwardRef<AgentFormRef, AgentFormProps>(
   (
     {
       agent,
@@ -313,7 +313,7 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
 
     return (
       <>
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Header Section with Enhanced Visual */}
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-xl" />
@@ -611,7 +611,7 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
   }
 );
 
-AgentForm.displayName = "AgentForm";
+NewAgentsForm.displayName = "NewAgentsForm";
 
-export default AgentForm;
+export default NewAgentsForm;
 export type { AgentFormProps, AgentFormRef };

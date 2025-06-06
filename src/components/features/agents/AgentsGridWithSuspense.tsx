@@ -1,13 +1,14 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoadingState } from "@/components/custom/LoadingState";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import AgentsGrid from "./AgentsGrid";
-import { useAllAgents } from "../../../hooks/useAgentsData";
+import EditAgentsDialog from "./EditAgentsDialog";
+import { useMyAgents } from "../../../hooks/useAgentsData";
 import type { Agent } from "./types";
 
 interface AgentsGridContentProps {
@@ -21,7 +22,7 @@ const AgentsGridContent = ({
   onConfigureAgent,
   onRetry,
 }: AgentsGridContentProps) => {
-  const { data: agentsData } = useAllAgents();
+  const { data: agentsData } = useMyAgents();
 
   // Se não há dados, não precisa renderizar AgentsGrid
   if (!agentsData) {
@@ -93,6 +94,8 @@ export const AgentsGridWithSuspense = ({
   onConfigureAgent,
 }: AgentsGridWithSuspenseProps) => {
   const queryClient = useQueryClient();
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   const handleRefetch = async () => {
     // Invalida e refaz todas as queries relacionadas aos agents
@@ -105,15 +108,49 @@ export const AgentsGridWithSuspense = ({
     });
   };
 
+  const handleConfigureAgent = (agent: Agent) => {
+    setEditingAgent(agent);
+    setShowEditDialog(true);
+    onConfigureAgent?.(agent);
+  };
+
+  const handleCloseEditDialog = () => {
+    setShowEditDialog(false);
+    setEditingAgent(null);
+  };
+
+  const handleAgentUpdated = () => {
+    // Cache será invalidado automaticamente pelo hook useUpdateAgent
+    handleRefetch();
+  };
+
+  const handleAgentDeleted = () => {
+    // Cache será invalidado automaticamente pelo hook useDeleteAgent
+    handleRefetch();
+  };
+
   return (
-    <ErrorBoundary FallbackComponent={AgentsGridError} onReset={handleRefetch}>
-      <Suspense fallback={<AgentsGridLoading />}>
-        <AgentsGridContent
-          onCreateFirstAgent={onCreateFirstAgent}
-          onConfigureAgent={onConfigureAgent}
-          onRetry={handleRefetch}
-        />
-      </Suspense>
-    </ErrorBoundary>
+    <>
+      <ErrorBoundary
+        FallbackComponent={AgentsGridError}
+        onReset={handleRefetch}
+      >
+        <Suspense fallback={<AgentsGridLoading />}>
+          <AgentsGridContent
+            onCreateFirstAgent={onCreateFirstAgent}
+            onConfigureAgent={handleConfigureAgent}
+            onRetry={handleRefetch}
+          />
+        </Suspense>
+      </ErrorBoundary>
+
+      <EditAgentsDialog
+        isOpen={showEditDialog}
+        onOpenChange={handleCloseEditDialog}
+        agent={editingAgent}
+        onAgentUpdated={handleAgentUpdated}
+        onAgentDeleted={handleAgentDeleted}
+      />
+    </>
   );
 };

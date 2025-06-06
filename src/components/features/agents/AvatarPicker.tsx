@@ -24,9 +24,8 @@ import {
   Shield,
   Rocket,
   Heart,
-  RefreshCw,
-  Camera,
 } from "lucide-react";
+import { AGENT_AVATAR_ICONS, AVATAR_GRADIENTS } from "@/constants/agents";
 
 interface AvatarPickerProps {
   open: boolean;
@@ -45,78 +44,144 @@ interface AvatarPickerProps {
   }) => void;
 }
 
-interface UnsplashImage {
+interface AvatarImage {
   id: string;
   thumb: string;
-  small: string;
   alt: string;
+  style: string;
 }
 
-// Available icons for agents
-const AGENT_ICONS = [
-  { id: "bot", icon: Bot, label: "Bot" },
-  { id: "brain", icon: Brain, label: "Brain" },
-  { id: "cpu", icon: Cpu, label: "CPU" },
-  { id: "sparkles", icon: Sparkles, label: "Sparkles" },
-  { id: "zap", icon: Zap, label: "Zap" },
-  { id: "message", icon: MessageSquare, label: "Message" },
-  { id: "lightbulb", icon: Lightbulb, label: "Lightbulb" },
-  { id: "cog", icon: Cog, label: "Settings" },
-  { id: "wand", icon: Wand2, label: "Magic" },
-  { id: "shield", icon: Shield, label: "Shield" },
-  { id: "rocket", icon: Rocket, label: "Rocket" },
-  { id: "heart", icon: Heart, label: "Heart" },
-];
+// Mapeamento dos ícones usando as constantes
+const ICON_COMPONENTS = {
+  bot: Bot,
+  brain: Brain,
+  cpu: Cpu,
+  sparkles: Sparkles,
+  zap: Zap,
+  message: MessageSquare,
+  lightbulb: Lightbulb,
+  cog: Cog,
+  wand: Wand2,
+  shield: Shield,
+  rocket: Rocket,
+  heart: Heart,
+} as const;
 
-// Gradient color combinations
-const GRADIENT_COLORS = [
-  {
-    id: "blue-purple",
+const ICON_LABELS = {
+  bot: "Bot",
+  brain: "Brain",
+  cpu: "CPU",
+  sparkles: "Sparkles",
+  zap: "Zap",
+  message: "Message",
+  lightbulb: "Lightbulb",
+  cog: "Settings",
+  wand: "Magic",
+  shield: "Shield",
+  rocket: "Rocket",
+  heart: "Heart",
+} as const;
+
+// Criar array de ícones usando as constantes
+const AGENT_ICONS = AGENT_AVATAR_ICONS.map((iconId) => ({
+  id: iconId,
+  icon: ICON_COMPONENTS[iconId],
+  label: ICON_LABELS[iconId],
+}));
+
+// Mapeamento dos gradientes usando as constantes
+const GRADIENT_CONFIG = {
+  "blue-purple": {
     from: "from-blue-500",
     to: "to-purple-500",
     label: "Blue to Purple",
   },
-  {
-    id: "green-teal",
+  "green-teal": {
     from: "from-green-500",
     to: "to-teal-500",
     label: "Green to Teal",
   },
-  {
-    id: "orange-red",
+  "orange-red": {
     from: "from-orange-500",
     to: "to-red-500",
     label: "Orange to Red",
   },
-  {
-    id: "pink-purple",
+  "pink-purple": {
     from: "from-pink-500",
     to: "to-purple-500",
     label: "Pink to Purple",
   },
-  {
-    id: "indigo-blue",
+  "indigo-blue": {
     from: "from-indigo-500",
     to: "to-blue-500",
     label: "Indigo to Blue",
   },
-  {
-    id: "yellow-orange",
+  "yellow-orange": {
     from: "from-yellow-500",
     to: "to-orange-500",
     label: "Yellow to Orange",
   },
-  {
-    id: "cyan-blue",
+  "cyan-blue": {
     from: "from-cyan-500",
     to: "to-blue-500",
     label: "Cyan to Blue",
   },
-  {
-    id: "purple-pink",
+  "purple-pink": {
     from: "from-purple-500",
     to: "to-pink-500",
     label: "Purple to Pink",
+  },
+} as const;
+
+// Criar array de gradientes usando as constantes
+const GRADIENT_COLORS = AVATAR_GRADIENTS.map((gradientId) => ({
+  id: gradientId,
+  ...GRADIENT_CONFIG[gradientId],
+}));
+
+// Avatares hardcoded de alta qualidade
+const AVATAR_IMAGES: AvatarImage[] = [
+  {
+    id: "avatar-1",
+    thumb:
+      "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=200&h=200&fit=crop&q=80",
+    alt: "Friendly Robot Assistant",
+    style: "realistic",
+  },
+  {
+    id: "avatar-2",
+    thumb:
+      "https://images.unsplash.com/photo-1535378620166-273708d44e4c?w=200&h=200&fit=crop&q=80",
+    alt: "Modern AI Robot",
+    style: "sleek",
+  },
+  {
+    id: "avatar-3",
+    thumb:
+      "https://images.unsplash.com/photo-1516192518150-0d8fee5425e3?w=200&h=200&fit=crop&q=80",
+    alt: "Humanoid Assistant",
+    style: "humanoid",
+  },
+  {
+    id: "avatar-4",
+    thumb:
+      "https://images.unsplash.com/photo-1555255707-c07966088b7b?w=200&h=200&fit=crop&q=80",
+    alt: "Tech-Enhanced Avatar",
+    style: "tech",
+  },
+  {
+    id: "avatar-5",
+    thumb:
+      "https://images.unsplash.com/photo-1563207153-f403bf289096?w=200&h=200&fit=crop&q=80",
+    alt: "Friendly AI Character",
+    style: "friendly",
+  },
+  {
+    id: "avatar-6",
+    thumb:
+      "https://images.unsplash.com/photo-1527430253228-e93688616381?w=200&h=200&fit=crop&q=80",
+    alt: "Cyber Assistant",
+    style: "cyber",
   },
 ];
 
@@ -127,79 +192,10 @@ export default function AvatarPicker({
   onSelect,
 }: AvatarPickerProps) {
   const [tempAvatar, setTempAvatar] = useState(currentAvatar);
-  const [unsplashImages, setUnsplashImages] = useState<UnsplashImage[]>([]);
-  const [loadingImages, setLoadingImages] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setTempAvatar(currentAvatar);
   }, [currentAvatar]);
-
-  // Load default images when dialog opens
-  useEffect(() => {
-    if (open && unsplashImages.length === 0) {
-      loadDefaultImages();
-    }
-  }, [open, unsplashImages.length]);
-
-  const loadDefaultImages = async () => {
-    setLoadingImages(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/unsplash/collections?count=6`);
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (Array.isArray(data) && data.length > 0) {
-        setUnsplashImages(data);
-      } else {
-        throw new Error("No avatar images found");
-      }
-    } catch (error) {
-      console.error("Failed to fetch default images:", error);
-      setError(
-        error instanceof Error ? error.message : "Failed to load images"
-      );
-    }
-    setLoadingImages(false);
-  };
-
-  const fetchNewImages = async () => {
-    setLoadingImages(true);
-    setError(null);
-
-    try {
-      // Force refresh with timestamp to avoid cache
-      const timestamp = Date.now();
-      const response = await fetch(
-        `/api/unsplash/collections?count=6&refresh=true&t=${timestamp}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (Array.isArray(data) && data.length > 0) {
-        setUnsplashImages(data);
-        setError(null); // Clear any previous errors
-      } else {
-        setError("Nenhuma nova imagem encontrada.");
-      }
-    } catch (error) {
-      console.error("Failed to fetch new images:", error);
-      setError(
-        error instanceof Error ? error.message : "Failed to load new images"
-      );
-    }
-    setLoadingImages(false);
-  };
 
   const handleConfirm = () => {
     onSelect(tempAvatar);
@@ -207,7 +203,6 @@ export default function AvatarPicker({
   };
 
   const handleClose = () => {
-    setError(null);
     onClose();
   };
 
@@ -313,87 +308,37 @@ export default function AvatarPicker({
                 <p className="text-sm text-muted-foreground">
                   Imagens de robôs e IA
                 </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={fetchNewImages}
-                  disabled={loadingImages}
-                >
-                  <RefreshCw
-                    className={`w-4 h-4 mr-2 ${
-                      loadingImages ? "animate-spin" : ""
-                    }`}
-                  />
-                  {loadingImages ? "Carregando..." : "Buscar Novas"}
-                </Button>
               </div>
 
-              {error && (
-                <div className="text-sm text-red-500 bg-red-50 dark:bg-red-950/20 p-3 rounded-md">
-                  {error}
-                </div>
-              )}
-
-              {loadingImages && unsplashImages.length === 0 && (
-                <div className="flex items-center justify-center h-32">
-                  <div className="text-center">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground">
-                      Carregando imagens...
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {unsplashImages.length > 0 && (
-                <div className="grid grid-cols-3 gap-2">
-                  {unsplashImages.map((img, index) => (
-                    <button
-                      key={img.id || index}
-                      type="button"
-                      onClick={() =>
-                        setTempAvatar((prev) => ({
-                          ...prev,
-                          imageUrl: img.small,
-                        }))
-                      }
-                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                        tempAvatar.imageUrl === img.small
-                          ? "border-primary shadow-lg scale-105"
-                          : "border-border hover:border-primary/50 hover:scale-105"
-                      }`}
-                    >
-                      <Image
-                        src={img.thumb}
-                        alt={img.alt}
-                        width={150}
-                        height={150}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        unoptimized
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {!loadingImages && unsplashImages.length === 0 && !error && (
-                <div className="text-center py-8">
-                  <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">
-                    Nenhuma imagem carregada ainda
-                  </p>
-                  <Button
-                    variant="outline"
-                    onClick={loadDefaultImages}
-                    className="mt-4"
+              <div className="grid grid-cols-3 gap-2">
+                {AVATAR_IMAGES.map((img) => (
+                  <button
+                    key={img.id}
+                    type="button"
+                    onClick={() =>
+                      setTempAvatar((prev) => ({
+                        ...prev,
+                        imageUrl: img.thumb,
+                      }))
+                    }
+                    className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                      tempAvatar.imageUrl === img.thumb
+                        ? "border-primary shadow-lg scale-105"
+                        : "border-border hover:border-primary/50 hover:scale-105"
+                    }`}
                   >
-                    <Camera className="w-4 h-4 mr-2" />
-                    Carregar Imagens
-                  </Button>
-                </div>
-              )}
+                    <Image
+                      src={img.thumb}
+                      alt={img.alt}
+                      width={150}
+                      height={150}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      unoptimized
+                    />
+                  </button>
+                ))}
+              </div>
             </TabsContent>
           </Tabs>
         </div>

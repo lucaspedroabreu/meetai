@@ -7,7 +7,6 @@ import {
 } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,7 +17,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   Bot,
   Pencil,
@@ -41,12 +39,13 @@ import AvatarPicker from "./AvatarPicker";
 import type { Agent } from "./types";
 import { AI_MODELS, DEFAULT_VALUES } from "@/constants/agents";
 
-interface AgentFormProps {
-  agent?: Agent;
+interface EditAgentFormProps {
+  agent: Agent; // Obrigatório para edição
   onSubmit: (agentData: Partial<Agent>) => void;
   onCancel?: () => void;
   isLoading?: boolean;
   onValidationChange?: (isValid: boolean) => void;
+  onDelete?: () => void;
 }
 
 interface AgentFormRef {
@@ -143,7 +142,7 @@ interface LimitWarningProps {
   className?: string;
 }
 
-const LimitWarning = ({
+const _LimitWarning = ({
   current,
   softLimit,
   className = "",
@@ -190,7 +189,7 @@ const GRADIENT_COLORS: Record<string, { from: string; to: string }> = {
   "purple-pink": { from: "from-purple-500", to: "to-pink-500" },
 };
 
-const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
+const EditAgentsForm = forwardRef<AgentFormRef, EditAgentFormProps>(
   (
     {
       agent,
@@ -198,19 +197,20 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
       onCancel: _onCancel,
       isLoading: _isLoading,
       onValidationChange,
+      onDelete: _onDelete,
     },
     ref
   ) => {
     const [formData, setFormData] = useState({
-      name: agent?.name || "",
-      description: agent?.description || "",
-      instructions: agent?.instructions || "",
-      model: agent?.model || DEFAULT_VALUES.model,
-      status: agent?.status || DEFAULT_VALUES.status,
-      avatarType: agent?.avatarType || DEFAULT_VALUES.avatarType,
-      avatarIcon: agent?.avatarIcon || DEFAULT_VALUES.avatarIcon,
-      avatarGradient: agent?.avatarGradient || DEFAULT_VALUES.avatarGradient,
-      avatarImageUrl: agent?.avatarImageUrl || "",
+      name: agent.name || "",
+      description: agent.description || "",
+      instructions: agent.instructions || "",
+      model: agent.model || DEFAULT_VALUES.model,
+      status: agent.status || DEFAULT_VALUES.status,
+      avatarType: agent.avatarType || DEFAULT_VALUES.avatarType,
+      avatarIcon: agent.avatarIcon || DEFAULT_VALUES.avatarIcon,
+      avatarGradient: agent.avatarGradient || DEFAULT_VALUES.avatarGradient,
+      avatarImageUrl: agent.avatarImageUrl || "",
     });
 
     const [showAvatarPicker, setShowAvatarPicker] = useState(false);
@@ -249,8 +249,7 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
 
     // Validation function to check if form is valid
     const isFormValid = useCallback(() => {
-      // Check required fields
-      const hasName = formData.name.trim().length > 0;
+      // Check required fields (name não é editável)
       const hasInstructions = formData.instructions.trim().length > 0;
 
       // Check avatar image URL requirement for unsplash type
@@ -259,19 +258,13 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
         hasValidAvatar = Boolean(formData.avatarImageUrl?.trim());
       }
 
-      return hasName && hasInstructions && hasValidAvatar;
-    }, [
-      formData.name,
-      formData.instructions,
-      formData.avatarType,
-      formData.avatarImageUrl,
-    ]);
+      return hasInstructions && hasValidAvatar;
+    }, [formData.instructions, formData.avatarType, formData.avatarImageUrl]);
 
     // Effect to notify parent about validation changes
     useEffect(() => {
       onValidationChange?.(isFormValid());
     }, [
-      formData.name,
       formData.instructions,
       formData.avatarType,
       formData.avatarImageUrl,
@@ -303,7 +296,7 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
       }));
     };
 
-    const isEditing = Boolean(agent);
+    const _isEditing = Boolean(agent);
 
     // Get selected icon component
     const SelectedIcon = AGENT_ICONS[formData.avatarIcon] || Bot;
@@ -313,69 +306,60 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
 
     return (
       <>
-        <div className="space-y-6">
-          {/* Header Section with Enhanced Visual */}
+        <div className="space-y-4">
+          {/* Header específico para edição - Mostra nome fixo */}
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-xl" />
-            <Card className="relative border-0 shadow-none bg-transparent pb-3">
-              <CardHeader className="-pb-1">
-                <div className="flex items-center gap-4">
-                  <div className="relative group">
-                    <div
-                      className={`w-16 h-16 bg-gradient-to-r ${selectedGradient.from} ${selectedGradient.to} rounded-xl flex items-center justify-center overflow-hidden shadow-lg ring-4 ring-background transition-transform group-hover:scale-105`}
-                    >
-                      {formData.avatarType === "icon" ? (
-                        <SelectedIcon className="w-8 h-8 text-white" />
-                      ) : formData.avatarImageUrl ? (
-                        <Image
-                          src={formData.avatarImageUrl}
-                          alt="Agent"
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        <Bot className="w-8 h-8 text-white" />
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowAvatarPicker(true)}
-                      className="absolute -bottom-1 -right-1 w-8 h-8 bg-primary rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg hover:scale-110"
-                    >
-                      <Pencil className="w-4 h-4 text-primary-foreground" />
-                    </button>
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                      {isEditing ? "Editar Agente" : "Criar Novo Agente"}
-                    </CardTitle>
-                    <p className="text-muted-foreground mt-1">
-                      {isEditing
-                        ? "Atualize as informações do seu agente"
-                        : "Configure seu assistente IA personalizado"}
-                    </p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Badge
-                        variant="secondary"
-                        className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-xl" />
+            <Card className="relative border border-green-200/50 dark:border-green-800/50 bg-gradient-to-r from-green-50/50 to-blue-50/50 dark:from-green-950/20 dark:to-blue-950/20">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="relative group">
+                      <div
+                        className={`w-14 h-14 bg-gradient-to-r ${selectedGradient.from} ${selectedGradient.to} rounded-lg flex items-center justify-center overflow-hidden shadow-md transition-transform group-hover:scale-105`}
                       >
-                        <Bot className="w-3 h-3 mr-1" />
-                        Assistente IA
-                      </Badge>
-                      <Button
+                        {formData.avatarType === "icon" ? (
+                          <SelectedIcon className="w-7 h-7 text-white" />
+                        ) : formData.avatarImageUrl ? (
+                          <Image
+                            src={formData.avatarImageUrl}
+                            alt="Agent"
+                            width={56}
+                            height={56}
+                            className="w-full h-full object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <Bot className="w-7 h-7 text-white" />
+                        )}
+                      </div>
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="sm"
                         onClick={() => setShowAvatarPicker(true)}
-                        className="text-xs"
+                        className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors shadow-lg"
                       >
-                        <Pencil className="w-3 h-3 mr-1" />
-                        Personalizar
-                      </Button>
+                        <Pencil className="w-3 h-3 text-white" />
+                      </button>
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-foreground">
+                        {formData.name}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        Agente IA • Editando configurações
+                      </p>
                     </div>
                   </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowAvatarPicker(true)}
+                    className="border-green-200 hover:border-green-300 hover:bg-green-50 dark:border-green-800 dark:hover:border-green-700 dark:hover:bg-green-950/50"
+                  >
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Alterar Avatar
+                  </Button>
                 </div>
               </CardHeader>
             </Card>
@@ -383,48 +367,18 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
 
           {/* Form Content */}
           <div className="space-y-4">
-            {/* Basic Information Section */}
+            {/* Descrição Section - Standalone */}
             <Card>
               <CardHeader className="pb-0">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <User className="w-5 h-5 text-blue-500" />
-                  Informações Básicas
+                  <User className="w-5 h-5 text-green-500" />
+                  Descrição do Agente
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium">
-                    Nome do Agente *
-                  </Label>
-                  <Input
-                    id="name"
-                    placeholder="Ex: Assistente de Vendas"
-                    value={formData.name}
-                    onChange={(e) =>
-                      handleInputChange(
-                        e.target.value,
-                        CHAR_LIMITS.name.hard,
-                        (value) =>
-                          setFormData((prev) => ({ ...prev, name: value }))
-                      )
-                    }
-                    required
-                    className={getInputStyles(
-                      formData.name.length,
-                      CHAR_LIMITS.name.soft,
-                      CHAR_LIMITS.name.hard,
-                      "blue"
-                    )}
-                  />
-                  <LimitWarning
-                    current={formData.name.length}
-                    softLimit={CHAR_LIMITS.name.soft}
-                  />
-                </div>
-
-                <div className="space-y-2">
                   <Label htmlFor="description" className="text-sm font-medium">
-                    Descrição
+                    Descrição (Opcional)
                   </Label>
                   <Textarea
                     id="description"
@@ -446,7 +400,7 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
                       formData.description.length,
                       CHAR_LIMITS.description.soft,
                       CHAR_LIMITS.description.hard,
-                      "blue"
+                      "green"
                     )}`}
                   />
                   <CharCounter
@@ -462,7 +416,7 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
             <Card>
               <CardHeader className="pb-0">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-purple-500" />
+                  <FileText className="w-5 h-5 text-blue-500" />
                   Instruções do Sistema
                 </CardTitle>
               </CardHeader>
@@ -492,7 +446,7 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
                       formData.instructions.length,
                       CHAR_LIMITS.instructions.soft,
                       CHAR_LIMITS.instructions.hard,
-                      "purple"
+                      "blue"
                     )}`}
                   />
                   <div className="space-y-2">
@@ -510,59 +464,55 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
               </CardContent>
             </Card>
 
-            {/* Configuration Section - Horizontal Layout */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border rounded-lg bg-card">
-              <div className="flex items-center gap-2">
-                <Settings className="w-5 h-5 text-green-500" />
-                <span className="text-lg font-semibold">Configurações</span>
-              </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <Label
-                    htmlFor="model"
-                    className="text-sm font-medium whitespace-nowrap"
-                  >
-                    Modelo IA:
-                  </Label>
-                  <Select
-                    value={formData.model}
-                    onValueChange={(value) =>
-                      setFormData((prev) => ({ ...prev, model: value }))
-                    }
-                  >
-                    <SelectTrigger className="w-full sm:w-40 transition-colors focus:ring-2 focus:ring-green-500/20">
-                      <SelectValue placeholder="Modelo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {AI_MODELS.map((model) => (
-                        <SelectItem key={model} value={model}>
-                          <div className="flex items-center gap-2">
-                            <div
-                              className={`w-2 h-2 rounded-full ${
-                                model.includes("gpt-4o")
-                                  ? "bg-green-500"
-                                  : model.includes("gpt-4")
-                                  ? "bg-blue-500"
-                                  : model.includes("gpt-3.5")
-                                  ? "bg-cyan-500"
-                                  : "bg-purple-500"
-                              }`}
-                            />
-                            {model.toUpperCase().replace("-", " ")}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {isEditing && (
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <Label
-                      htmlFor="status"
-                      className="text-sm font-medium whitespace-nowrap"
+            {/* Configuration Section - Vertical Layout */}
+            <Card>
+              <CardHeader className="pb-0">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-green-500" />
+                  Configurações
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="model" className="text-sm font-medium">
+                      Modelo IA
+                    </Label>
+                    <Select
+                      value={formData.model}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ ...prev, model: value }))
+                      }
                     >
-                      Status:
+                      <SelectTrigger className="w-full transition-colors focus:ring-2 focus:ring-green-500/20">
+                        <SelectValue placeholder="Selecionar modelo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {AI_MODELS.map((model) => (
+                          <SelectItem key={model} value={model}>
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`w-2 h-2 rounded-full ${
+                                  model.includes("gpt-4o")
+                                    ? "bg-green-500"
+                                    : model.includes("gpt-4")
+                                    ? "bg-blue-500"
+                                    : model.includes("gpt-3.5")
+                                    ? "bg-cyan-500"
+                                    : "bg-purple-500"
+                                }`}
+                              />
+                              {model.toUpperCase().replace("-", " ")}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="status" className="text-sm font-medium">
+                      Status do Agente
                     </Label>
                     <Select
                       value={formData.status}
@@ -570,8 +520,8 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
                         setFormData((prev) => ({ ...prev, status: value }))
                       }
                     >
-                      <SelectTrigger className="w-full sm:w-32 transition-colors focus:ring-2 focus:ring-green-500/20">
-                        <SelectValue placeholder="Status" />
+                      <SelectTrigger className="w-full transition-colors focus:ring-2 focus:ring-green-500/20">
+                        <SelectValue placeholder="Selecionar status" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="active">
@@ -589,9 +539,9 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
                       </SelectContent>
                     </Select>
                   </div>
-                )}
-              </div>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
@@ -611,7 +561,7 @@ const AgentForm = forwardRef<AgentFormRef, AgentFormProps>(
   }
 );
 
-AgentForm.displayName = "AgentForm";
+EditAgentsForm.displayName = "EditAgentsForm";
 
-export default AgentForm;
-export type { AgentFormProps, AgentFormRef };
+export default EditAgentsForm;
+export type { EditAgentFormProps, AgentFormRef };

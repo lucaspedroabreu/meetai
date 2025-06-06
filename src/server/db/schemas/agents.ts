@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./betterAuth";
-
 import { nanoid } from "nanoid";
+import { DEFAULT_VALUES } from "@/constants/agents";
 
 export const agents = pgTable("agents", {
   id: text("id")
@@ -15,13 +15,15 @@ export const agents = pgTable("agents", {
       onDelete: "cascade",
     }),
   instructions: text("instructions").notNull(),
-  model: text("model").notNull().default("gpt-4"),
-  status: text("status").notNull().default("active"), // 'active' | 'inactive'
+  model: text("model").notNull().default(DEFAULT_VALUES.model),
+  status: text("status").notNull().default(DEFAULT_VALUES.status), // 'active' | 'inactive'
 
   // Avatar fields
-  avatarType: text("avatar_type").notNull().default("icon"), // 'icon' | 'unsplash'
-  avatarIcon: text("avatar_icon").notNull().default("bot"),
-  avatarGradient: text("avatar_gradient").notNull().default("blue-purple"),
+  avatarType: text("avatar_type").notNull().default(DEFAULT_VALUES.avatarType), // 'icon' | 'unsplash'
+  avatarIcon: text("avatar_icon").notNull().default(DEFAULT_VALUES.avatarIcon),
+  avatarGradient: text("avatar_gradient")
+    .notNull()
+    .default(DEFAULT_VALUES.avatarGradient),
   avatarImageUrl: text("avatar_image_url"),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
