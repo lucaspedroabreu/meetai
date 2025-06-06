@@ -20,16 +20,7 @@ import {
 } from "@/components/ui/drawer";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import {
-  User,
-  Settings,
-  LogOut,
-  Moon,
-  Sun,
-  ChevronDown,
-  CreditCard,
-} from "lucide-react";
-import { useTheme } from "next-themes";
+import { User, Settings, LogOut, ChevronDown, CreditCard } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { authClient } from "@/lib/auth-client";
@@ -115,17 +106,15 @@ const MenuItems = memo(
   ({
     onClose,
     handleLogout,
-    toggleTheme,
     isLoggingOut,
-    theme,
     isMobile = false,
+    router,
   }: {
     onClose?: () => void;
     handleLogout: () => void;
-    toggleTheme: () => void;
     isLoggingOut: boolean;
-    theme: string | undefined;
     isMobile?: boolean;
+    router: { push: (path: string) => void };
   }) => {
     const handleItemClick = (action: () => void) => {
       action();
@@ -138,7 +127,7 @@ const MenuItems = memo(
           <Button
             variant="ghost"
             className="w-full justify-start h-12 text-base"
-            onClick={() => handleItemClick(() => {})}
+            onClick={() => handleItemClick(() => router.push("/profile"))}
           >
             <User className="mr-3 h-5 w-5" />
             Perfil
@@ -147,7 +136,7 @@ const MenuItems = memo(
           <Button
             variant="ghost"
             className="w-full justify-start h-12 text-base"
-            onClick={() => handleItemClick(() => {})}
+            onClick={() => handleItemClick(() => router.push("/settings"))}
           >
             <Settings className="mr-3 h-5 w-5" />
             Configurações
@@ -160,19 +149,6 @@ const MenuItems = memo(
           >
             <CreditCard className="mr-3 h-5 w-5" />
             Assinaturas
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="w-full justify-start h-12 text-base"
-            onClick={() => handleItemClick(toggleTheme)}
-          >
-            {theme === "dark" ? (
-              <Sun className="mr-3 h-5 w-5" />
-            ) : (
-              <Moon className="mr-3 h-5 w-5" />
-            )}
-            Alternar tema
           </Button>
 
           <div className="border-t border-border my-4" />
@@ -195,12 +171,12 @@ const MenuItems = memo(
         <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/profile")}>
           <User className="mr-2 h-4 w-4" />
           Perfil
         </DropdownMenuItem>
 
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/settings")}>
           <Settings className="mr-2 h-4 w-4" />
           Configurações
         </DropdownMenuItem>
@@ -208,15 +184,6 @@ const MenuItems = memo(
         <DropdownMenuItem>
           <CreditCard className="mr-2 h-4 w-4" />
           Assinaturas
-        </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={toggleTheme}>
-          {theme === "dark" ? (
-            <Sun className="mr-2 h-4 w-4" />
-          ) : (
-            <Moon className="mr-2 h-4 w-4" />
-          )}
-          Alternar tema
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
@@ -239,7 +206,6 @@ MenuItems.displayName = "MenuItems";
 export const UserMenu = memo(({ user }: UserMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const isMobile = useIsMobile();
 
@@ -258,10 +224,6 @@ export const UserMenu = memo(({ user }: UserMenuProps) => {
       console.error("Erro ao fazer logout:", error);
       setIsLoggingOut(false);
     }
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const userInfo = getUserInfo(user);
@@ -299,10 +261,9 @@ export const UserMenu = memo(({ user }: UserMenuProps) => {
           <MenuItems
             onClose={() => setIsOpen(false)}
             handleLogout={handleLogout}
-            toggleTheme={toggleTheme}
             isLoggingOut={isLoggingOut}
-            theme={theme}
             isMobile={true}
+            router={router}
           />
 
           <DrawerFooter>
@@ -341,9 +302,8 @@ export const UserMenu = memo(({ user }: UserMenuProps) => {
         <MenuItems
           onClose={() => setIsOpen(false)}
           handleLogout={handleLogout}
-          toggleTheme={toggleTheme}
           isLoggingOut={isLoggingOut}
-          theme={theme}
+          router={router}
         />
       </DropdownMenuContent>
     </DropdownMenu>

@@ -89,16 +89,21 @@ const DashboardHeader = memo(function DashboardHeader() {
     <>
       <header
         className={`
-        sticky top-0 z-40 flex shrink-0 items-center w-full
-        border-b border-border/30 bg-background/85 backdrop-blur-xl 
-        supports-[backdrop-filter]:bg-background/70 
-        transition-all duration-300
+        dashboard-header-sticky sticky top-0 z-50 flex shrink-0 items-center w-full
+        border-b border-border/40 bg-background/95 backdrop-blur-md 
+        supports-[backdrop-filter]:bg-background/80 
+        transition-all duration-300 shadow-sm
         ${
           isMobile
             ? "h-14 px-3 pt-safe-top justify-between" // Mobile: space-between para separar os lados
             : "h-16 px-4 justify-between" // Desktop: justify-between para usar todo espaço
         }
       `}
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+        }}
       >
         {/* Desktop: Layout tradicional */}
         {!isMobile && (

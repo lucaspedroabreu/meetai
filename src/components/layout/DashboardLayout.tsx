@@ -42,9 +42,9 @@ const DashboardLayoutInner = memo(function DashboardLayoutInner({
       <SidebarProvider>
         <div className="min-h-screen bg-background flex w-full">
           <DashboardSidebar user={user} />
-          <div className="flex-1 flex flex-col overflow-hidden w-full">
+          <div className="flex-1 flex flex-col w-full min-h-screen dashboard-main-content">
             <DashboardHeader />
-            <main className="flex-1 overflow-auto py-10 w-full">
+            <main className="flex-1 py-10 w-full">
               <div className="w-full">{children}</div>
             </main>
           </div>
