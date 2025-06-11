@@ -3,8 +3,8 @@ export interface Agent {
   id: string | number;
   name: string;
   instructions: string;
-  description?: string;
-  status?: "active" | "inactive";
+  description?: string | null;
+  status?: string;
   model?: string;
 
   // Avatar fields

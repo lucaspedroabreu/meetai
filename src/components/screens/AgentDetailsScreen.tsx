@@ -244,7 +244,7 @@ export default function AgentDetailsScreen({
         statusSeed
       ] as keyof typeof PAYMENT_STATUS,
     };
-  }, [agent?.id, agentId]); // Só recalcula se o agente mudar
+  }, [agentId, agent]); // include agent
 
   // Função para mapear dados do frontend para o schema do backend
   const mapToUpdateSchema = (
@@ -252,7 +252,7 @@ export default function AgentDetailsScreen({
   ): Partial<InsertAgentSchema> => {
     return {
       instructions: agentData.instructions,
-      description: agentData.description,
+      description: agentData.description ? agentData.description : undefined,
       model: agentData.model as InsertAgentSchema["model"],
       status: agentData.status as InsertAgentSchema["status"],
       avatarType: agentData.avatarType as InsertAgentSchema["avatarType"],
@@ -268,7 +268,7 @@ export default function AgentDetailsScreen({
 
     try {
       const updateData = mapToUpdateSchema(agentData);
-      const result = await updateAgentMutation.mutateAsync({
+      await updateAgentMutation.mutateAsync({
         id: String(agent.id),
         ...updateData,
       });
@@ -517,7 +517,7 @@ export default function AgentDetailsScreen({
                 <CardContent className="space-y-6">
                   <EditAgentsForm
                     ref={agentFormRef}
-                    agent={agent}
+                    agent={agent as Agent}
                     onSubmit={handleSubmit}
                     onCancel={() => router.push("/agents")}
                     isLoading={updateAgentMutation.isPending}

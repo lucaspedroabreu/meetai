@@ -34,7 +34,7 @@ export default function NewAgentsDialog({
     return {
       name: agentData.name || "",
       instructions: agentData.instructions || "",
-      description: agentData.description,
+      description: agentData.description ?? undefined,
       model: agentData.model as InsertAgentSchema["model"],
       status: agentData.status as InsertAgentSchema["status"],
       avatarType: agentData.avatarType as InsertAgentSchema["avatarType"],

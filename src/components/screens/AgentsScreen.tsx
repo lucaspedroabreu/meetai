@@ -21,7 +21,7 @@ import { Plus, Grid3X3, Table2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import NewAgentsDialog from "@/components/features/agents/NewAgentsDialog";
 import { useMyAgents } from "@/hooks/useAgentsData";
-import { prepareAgents, PAGE_SIZE } from "@/lib/agentsPagination";
+import { prepareAgents } from "@/lib/agentsPagination";
 import { LoadingState } from "@/components/custom/LoadingState";
 import { ErrorMessage } from "@/components/custom-ui/error-message";
 

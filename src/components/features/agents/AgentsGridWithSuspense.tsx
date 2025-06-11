@@ -103,7 +103,7 @@ export const AgentsGridWithSuspense = ({
     });
   };
 
-  const handleConfigureAgent = (agent: Agent) => {
+  const _handleConfigureAgent = (agent: Agent) => {
     setEditingAgent(agent);
     setShowEditDialog(true);
   };

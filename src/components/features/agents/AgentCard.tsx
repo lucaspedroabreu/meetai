@@ -16,9 +16,8 @@ import {
   Shield,
   Rocket,
   Heart,
-  DollarSign,
-  Clock,
   CheckCircle,
+  Clock,
   XCircle,
   Video,
 } from "lucide-react";

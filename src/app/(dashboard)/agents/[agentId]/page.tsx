@@ -1,11 +1,11 @@
 import AgentDetailsScreen from "@/components/screens/AgentDetailsScreen";
 
-interface AgentPageProps {
-  params: {
-    agentId: string;
-  };
-}
-
-export default function AgentPage({ params }: AgentPageProps) {
-  return <AgentDetailsScreen agentId={params.agentId} />;
+export default async function AgentPage({
+  params,
+}: {
+  params: Promise<{ agentId: string }>;
+}) {
+  // `params` is a promise in Next.js 15 for dynamic segments
+  const { agentId } = await params;
+  return <AgentDetailsScreen agentId={agentId} />;
 }

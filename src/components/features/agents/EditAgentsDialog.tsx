@@ -151,7 +151,10 @@ export default function EditAgentsDialog({
   ): Partial<InsertAgentSchema> => {
     return {
       instructions: agentData.instructions,
-      description: agentData.description,
+      description:
+        agentData.description !== null && agentData.description !== undefined
+          ? agentData.description
+          : undefined,
       model: agentData.model as InsertAgentSchema["model"],
       status: agentData.status as InsertAgentSchema["status"],
       avatarType: agentData.avatarType as InsertAgentSchema["avatarType"],

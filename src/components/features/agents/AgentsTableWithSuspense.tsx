@@ -12,10 +12,10 @@ import { useMyAgents } from "../../../hooks/useAgentsData";
 import type { Agent } from "./types";
 
 interface AgentsTableContentProps {
-  onRetry: () => void;
+  _onRetry: () => void;
 }
 
-const AgentsTableContent = ({ onRetry }: AgentsTableContentProps) => {
+const AgentsTableContent = ({ _onRetry }: AgentsTableContentProps) => {
   const { data: agentsData } = useMyAgents();
 
   // Se não há dados, não precisa renderizar AgentsTable
@@ -71,9 +71,7 @@ const AgentsTableError = ({ resetErrorBoundary }: AgentsTableErrorProps) => (
   </div>
 );
 
-interface AgentsTableWithSuspenseProps {}
-
-export const AgentsTableWithSuspense = ({}: AgentsTableWithSuspenseProps) => {
+export const AgentsTableWithSuspense = () => {
   const queryClient = useQueryClient();
   const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -89,7 +87,7 @@ export const AgentsTableWithSuspense = ({}: AgentsTableWithSuspenseProps) => {
     });
   };
 
-  const handleConfigureAgent = (agent: Agent) => {
+  const _handleConfigureAgent = (agent: Agent) => {
     setEditingAgent(agent);
     setShowEditDialog(true);
   };
@@ -116,7 +114,7 @@ export const AgentsTableWithSuspense = ({}: AgentsTableWithSuspenseProps) => {
         onReset={handleRefetch}
       >
         <Suspense fallback={<AgentsTableLoading />}>
-          <AgentsTableContent onRetry={handleRefetch} />
+          <AgentsTableContent _onRetry={handleRefetch} />
         </Suspense>
       </ErrorBoundary>
 

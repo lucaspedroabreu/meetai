@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAllAgents } from "../../../hooks/useAgentsData";
 import { useMyAgents } from "../../../hooks/useAgentsData";
 
 const AgentsCountContent = () => {

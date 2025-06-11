@@ -9,11 +9,16 @@ export function prepareAgents(agents: Agent[], search: string, page: number) {
   );
 
   // ordena pelo campo meetingsCount se existir (desc)
-  const ordered = [...filtered].sort((a: any, b: any) => {
-    const mb = b.meetingsCount ?? 0;
-    const ma = a.meetingsCount ?? 0;
-    return mb - ma;
-  });
+  const ordered = [...filtered].sort(
+    (
+      a: Agent & { meetingsCount?: number },
+      b: Agent & { meetingsCount?: number }
+    ) => {
+      const mb = b.meetingsCount ?? 0;
+      const ma = a.meetingsCount ?? 0;
+      return mb - ma;
+    }
+  );
 
   const total = ordered.length;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
