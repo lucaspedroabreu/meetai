@@ -5,10 +5,11 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAllAgents } from "../../../hooks/useAgentsData";
+import { useMyAgents } from "../../../hooks/useAgentsData";
 
 const AgentsCountContent = () => {
-  const { data: agentsData } = useAllAgents();
-  const count = agentsData?.length || 0;
+  const { data: agentsData } = useMyAgents();
+  const count = agentsData?.filter((a) => a.status !== "inactive").length || 0;
 
   return (
     <span>

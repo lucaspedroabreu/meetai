@@ -6,37 +6,27 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LoadingState } from "@/components/custom/LoadingState";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
-import AgentsGrid from "./AgentsGrid";
+import AgentsTable from "./AgentsTable";
 import EditAgentsDialog from "./EditAgentsDialog";
 import { useMyAgents } from "../../../hooks/useAgentsData";
 import type { Agent } from "./types";
 
-interface AgentsGridContentProps {
-  onCreateFirstAgent?: () => void;
+interface AgentsTableContentProps {
   onRetry: () => void;
 }
 
-const AgentsGridContent = ({
-  onCreateFirstAgent,
-  onRetry,
-}: AgentsGridContentProps) => {
+const AgentsTableContent = ({ onRetry }: AgentsTableContentProps) => {
   const { data: agentsData } = useMyAgents();
 
-  // Se não há dados, não precisa renderizar AgentsGrid
+  // Se não há dados, não precisa renderizar AgentsTable
   if (!agentsData) {
     return null;
   }
 
-  return (
-    <AgentsGrid
-      agents={agentsData as Agent[]}
-      onCreateFirstAgent={onCreateFirstAgent}
-      onRetry={onRetry}
-    />
-  );
+  return <AgentsTable agents={agentsData as Agent[]} />;
 };
 
-const AgentsGridLoading = () => (
+const AgentsTableLoading = () => (
   <div className="max-w-6xl mx-auto">
     <div className="mb-6">
       <h3 className="text-2xl font-semibold mb-2">Seus Agentes</h3>
@@ -53,11 +43,11 @@ const AgentsGridLoading = () => (
   </div>
 );
 
-interface AgentsGridErrorProps {
+interface AgentsTableErrorProps {
   resetErrorBoundary: () => void;
 }
 
-const AgentsGridError = ({ resetErrorBoundary }: AgentsGridErrorProps) => (
+const AgentsTableError = ({ resetErrorBoundary }: AgentsTableErrorProps) => (
   <div className="max-w-6xl mx-auto">
     <div className="mb-6">
       <h3 className="text-2xl font-semibold mb-2">Seus Agentes</h3>
@@ -81,13 +71,9 @@ const AgentsGridError = ({ resetErrorBoundary }: AgentsGridErrorProps) => (
   </div>
 );
 
-interface AgentsGridWithSuspenseProps {
-  onCreateFirstAgent?: () => void;
-}
+interface AgentsTableWithSuspenseProps {}
 
-export const AgentsGridWithSuspense = ({
-  onCreateFirstAgent,
-}: AgentsGridWithSuspenseProps) => {
+export const AgentsTableWithSuspense = ({}: AgentsTableWithSuspenseProps) => {
   const queryClient = useQueryClient();
   const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -126,14 +112,11 @@ export const AgentsGridWithSuspense = ({
   return (
     <>
       <ErrorBoundary
-        FallbackComponent={AgentsGridError}
+        FallbackComponent={AgentsTableError}
         onReset={handleRefetch}
       >
-        <Suspense fallback={<AgentsGridLoading />}>
-          <AgentsGridContent
-            onCreateFirstAgent={onCreateFirstAgent}
-            onRetry={handleRefetch}
-          />
+        <Suspense fallback={<AgentsTableLoading />}>
+          <AgentsTableContent onRetry={handleRefetch} />
         </Suspense>
       </ErrorBoundary>
 

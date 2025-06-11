@@ -23,5 +23,9 @@ export { AgentsGridWithSuspense } from "./AgentsGridWithSuspense";
 export { default as AgentCard } from "./AgentCard";
 export { default as AgentsEmptyState } from "./AgentsEmptyState";
 
+// Agents Table and Components
+export { default as AgentsTable } from "./AgentsTable";
+export { AgentsTableWithSuspense } from "./AgentsTableWithSuspense";
+
 // Error Boundary
 export { AgentsErrorBoundary } from "./AgentsErrorBoundary";
