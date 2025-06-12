@@ -3,10 +3,17 @@ import type { Agent } from "@/components/features/agents/types";
 export const PAGE_SIZE = 10;
 
 export function prepareAgents(agents: Agent[], search: string, page: number) {
-  // filtro por nome
-  const filtered = agents.filter((a) =>
-    a.name?.toLowerCase().includes(search.toLowerCase())
-  );
+  // filtro por nome, descrição e instruções
+  const lowerSearch = search.toLowerCase();
+  const filtered = agents.filter((a) => {
+    const nameMatch = a.name?.toLowerCase().includes(lowerSearch);
+    const descriptionMatch = a.description?.toLowerCase().includes(lowerSearch);
+    const instructionsMatch = a.instructions
+      ?.toLowerCase()
+      .includes(lowerSearch);
+
+    return nameMatch || descriptionMatch || instructionsMatch;
+  });
 
   // ordena pelo campo meetingsCount se existir (desc)
   const ordered = [...filtered].sort(
