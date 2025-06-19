@@ -45,11 +45,18 @@ export const agentsRouter = createTRPCRouter({
           description: agentsTable.description,
         })
         .from(agentsTable)
-        .where(searchFilter);
+        .where(searchFilter)
+        .limit(pageSize)
+        .offset(offset);
 
       const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
-      return agents;
+      return {
+        agents,
+        total,
+        totalPages,
+        currentPage: page,
+      };
     }),
 
   // Privado - listar agents do usuário logado
@@ -70,8 +77,8 @@ export const agentsRouter = createTRPCRouter({
         search,
       });
 
-      // Filtro base: pertencer ao usuárioal
-      let baseFilter = eq(agentsTable.userId, ctx.user.id);
+      // Filtro base: pertencer ao usuário atual
+      const baseFilter = eq(agentsTable.userId, ctx.user.id);
 
       // Aplica busca se existir
       const searchFilter = search

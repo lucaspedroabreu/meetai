@@ -20,11 +20,7 @@ import {
 import { Plus, Grid3X3, Table2 } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import NewAgentsDialog from "@/components/features/agents/NewAgentsDialog";
-import {
-  useMyAgents,
-  type AgentsPage,
-  type AgentsResponse,
-} from "@/hooks/useAgentsData";
+import { useMyAgents } from "@/hooks/useAgentsData";
 import { prepareAgents } from "@/lib/agentsPagination";
 import { LoadingState } from "@/components/custom/LoadingState";
 import { ErrorMessage } from "@/components/custom-ui/error-message";
@@ -79,9 +75,13 @@ export default function AgentsScreen() {
       };
     }
     return prepareAgents((agentsData as Agent[]) ?? [], search, page);
-  }, [mode, pagedData, agentsData, search, page]);
+  }, [mode, pagedData, agentsData, search, page, totalPagesServer]);
 
-  if (page > totalPages) setPage(totalPages);
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   const toast = useToast();
 

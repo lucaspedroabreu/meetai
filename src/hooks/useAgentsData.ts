@@ -3,6 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import type { UseSuspenseQueryOptions } from "@tanstack/react-query";
 import { useTRPC } from "@/server/trpc/client";
 import { CACHE_CONFIG } from "@/lib/cache-keys";
 import type { Agent } from "@/components/features/agents";
@@ -11,10 +12,13 @@ export const useAllAgents = () => {
   const trpc = useTRPC();
   const queryOptions = trpc.agents.getMany.queryOptions();
 
-  return useSuspenseQuery<Agent[]>({
-    ...(queryOptions as any),
+  const base = queryOptions as UseSuspenseQueryOptions<Agent[]>;
+  const options = {
+    ...base,
     ...CACHE_CONFIG.AGENTS,
-  });
+  } satisfies UseSuspenseQueryOptions<Agent[]>;
+
+  return useSuspenseQuery<Agent[]>(options);
 };
 
 export interface MyAgentsParams {
@@ -43,9 +47,9 @@ export function useMyAgents(params?: MyAgentsParams) {
   const queryOptions = trpc.agents.getMyAgents.queryOptions(params);
 
   return useSuspenseQuery<AgentsResponse>({
-    ...(queryOptions as any),
+    ...queryOptions,
     ...CACHE_CONFIG.AGENTS,
-  });
+  } as unknown as UseSuspenseQueryOptions<AgentsResponse>);
 }
 
 export const useCreateAgent = () => {
