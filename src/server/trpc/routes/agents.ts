@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, or, ilike, count } from "drizzle-orm";
 import { baseProcedure, protectedProcedure, createTRPCRouter } from "../init";
 import { agents as agentsTable } from "@/server/db/schemas/agents";
 import { assert, assertDefined, assertIsString } from "@/utils/error-handling";
@@ -7,40 +7,131 @@ import {
   updateAgentSchema,
   getAgentByIdSchema,
   deleteAgentSchema,
+  listAgentsSchema,
 } from "../modules/agents/schema";
+
+const SNAPSHOT_LIMIT = 100;
+
 export const agentsRouter = createTRPCRouter({
   // Público - listar todos os agents (sem dados privados)
-  getMany: baseProcedure.query(async ({ ctx }) => {
-    ctx.log("Listando agents públicos");
+  getMany: baseProcedure
+    .input(listAgentsSchema.optional())
+    .query(async ({ ctx, input }) => {
+      const { page = 1, pageSize = 10, search } = input ?? {};
 
-    const agents = await ctx.db
-      .select({
-        id: agentsTable.id,
-        name: agentsTable.name,
-        // description: agentsTable.description,
-        // Excluir campos privados como userId, etc.
-      })
-      .from(agentsTable);
+      ctx.log("Listando agents públicos", { page, pageSize, search });
 
-    return agents;
-  }),
+      const offset = (page - 1) * pageSize;
+
+      // Construir filtro de busca
+      const searchFilter = search
+        ? or(
+            ilike(agentsTable.name, `%${search}%`),
+            ilike(agentsTable.description, `%${search}%`),
+            ilike(agentsTable.instructions, `%${search}%`)
+          )
+        : undefined;
+
+      // Total de registros
+      const [{ value: total }] = await ctx.db
+        .select({ value: count() })
+        .from(agentsTable)
+        .where(searchFilter);
+
+      const agents = await ctx.db
+        .select({
+          id: agentsTable.id,
+          name: agentsTable.name,
+          description: agentsTable.description,
+        })
+        .from(agentsTable)
+        .where(searchFilter)
+        .limit(pageSize)
+        .offset(offset);
+
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+      return {
+        agents,
+        total,
+        totalPages,
+        currentPage: page,
+      };
+    }),
 
   // Privado - listar agents do usuário logado
-  getMyAgents: protectedProcedure.query(async ({ ctx }) => {
-    assertDefined(
-      ctx.user?.id,
-      "User ID deve estar definido para usuários autenticados"
-    );
+  getMyAgents: protectedProcedure
+    .input(listAgentsSchema.optional())
+    .query(async ({ ctx, input }) => {
+      assertDefined(
+        ctx.user?.id,
+        "User ID deve estar definido para usuários autenticados"
+      );
 
-    ctx.log("Listando agents do usuário", { userId: ctx.user.id });
+      const { page, pageSize = 10, search } = input ?? {};
 
-    const agents = await ctx.db
-      .select()
-      .from(agentsTable)
-      .where(eq(agentsTable.userId, ctx.user.id));
+      ctx.log("Listando agents do usuário", {
+        userId: ctx.user.id,
+        page,
+        pageSize,
+        search,
+      });
 
-    return agents;
-  }),
+      // Filtro base: pertencer ao usuário atual
+      const baseFilter = eq(agentsTable.userId, ctx.user.id);
+
+      // Aplica busca se existir
+      const searchFilter = search
+        ? or(
+            ilike(agentsTable.name, `%${search}%`),
+            ilike(agentsTable.description, `%${search}%`),
+            ilike(agentsTable.instructions, `%${search}%`)
+          )
+        : undefined;
+
+      const combinedFilter = searchFilter
+        ? and(baseFilter, searchFilter)
+        : baseFilter;
+
+      // ───────── SNAPSHOT (sem pagina) ─────────
+      if (!page) {
+        const rows = await ctx.db
+          .select()
+          .from(agentsTable)
+          .where(combinedFilter)
+          .limit(SNAPSHOT_LIMIT + 1);
+
+        const hasMore = rows.length > SNAPSHOT_LIMIT;
+        return {
+          mode: "snapshot" as const,
+          agents: rows.slice(0, SNAPSHOT_LIMIT),
+          hasMore,
+        };
+      }
+
+      // ───────── PAGINAÇÃO REAL ─────────
+      const offset = (page - 1) * pageSize;
+
+      const [{ value: total }] = await ctx.db
+        .select({ value: count() })
+        .from(agentsTable)
+        .where(combinedFilter);
+
+      const agents = await ctx.db
+        .select()
+        .from(agentsTable)
+        .where(combinedFilter)
+        .limit(pageSize)
+        .offset(offset);
+
+      return {
+        mode: "page" as const,
+        agents,
+        total,
+        totalPages: Math.max(1, Math.ceil(total / pageSize)),
+        currentPage: page,
+      };
+    }),
 
   // Privado - criar novo agent
   create: protectedProcedure

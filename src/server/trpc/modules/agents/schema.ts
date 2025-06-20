@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 import {
   AI_MODELS,
   AGENT_STATUS,
@@ -150,7 +150,14 @@ export const deleteAgentSchema = z.object({
   }),
 });
 
+export const listAgentsSchema = z.object({
+  page: z.number().min(1).optional(),
+  pageSize: z.number().min(1).max(100).default(10).optional(),
+  search: z.string().nullish().optional(),
+});
+
 export type InsertAgentSchema = z.input<typeof insertAgentSchema>;
 export type UpdateAgentSchema = z.input<typeof updateAgentSchema>;
 export type GetAgentByIdSchema = z.input<typeof getAgentByIdSchema>;
 export type DeleteAgentSchema = z.input<typeof deleteAgentSchema>;
+export type ListAgentsSchema = z.input<typeof listAgentsSchema>;

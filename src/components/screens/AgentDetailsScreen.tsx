@@ -222,10 +222,12 @@ export default function AgentDetailsScreen({
   // Buscar dados dos agentes
   const { data: agentsData, isLoading, error } = useMyAgents();
 
+  // Extrai a lista de agentes do response
+  const agents = agentsData?.agents ?? [];
+
   // Encontrar o agente específico (pode ser por ID ou índice)
-  const agent = agentsData?.find(
-    (a) =>
-      String(a.id) === agentId || agentsData.indexOf(a).toString() === agentId
+  const agent = agents.find(
+    (a) => String(a.id) === agentId || agents.indexOf(a).toString() === agentId
   );
 
   // Dados de pagamento de exemplo para este agente - Memoizados para performance

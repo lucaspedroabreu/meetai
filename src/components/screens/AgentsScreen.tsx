@@ -18,12 +18,13 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { Plus, Grid3X3, Table2 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import NewAgentsDialog from "@/components/features/agents/NewAgentsDialog";
 import { useMyAgents } from "@/hooks/useAgentsData";
 import { prepareAgents } from "@/lib/agentsPagination";
 import { LoadingState } from "@/components/custom/LoadingState";
 import { ErrorMessage } from "@/components/custom-ui/error-message";
+import { useDebounce } from "@/hooks/useDebounce";
 
 type ViewMode = "grid" | "table";
 
@@ -32,21 +33,64 @@ export default function AgentsScreen() {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const toast = useToast();
+  const [mode, setMode] = useState<"local" | "server">("local");
 
-  const { data: agentsData, isLoading, isError } = useMyAgents();
+  const debouncedSearch = useDebounce(search, 300);
+
+  const {
+    data: snapshotData,
+    isLoading: isLoadingSnap,
+    isError: isErrorSnap,
+  } = useMyAgents();
+
+  useEffect(() => {
+    if (
+      snapshotData &&
+      snapshotData.mode === "snapshot" &&
+      snapshotData.hasMore
+    ) {
+      setMode("server");
+    }
+  }, [snapshotData]);
+
+  const {
+    data: pagedData,
+    isLoading: isLoadingPage,
+    isError: isErrorPage,
+  } = useMyAgents(
+    mode === "server" ? { page, search: debouncedSearch } : undefined
+  );
+
+  const agentsData = mode === "server" ? pagedData : snapshotData;
+  const totalPagesServer =
+    mode === "server" && pagedData?.mode === "page" ? pagedData.totalPages : 1;
 
   const { total, totalPages, slice } = useMemo(() => {
-    return prepareAgents((agentsData as Agent[]) ?? [], search, page);
-  }, [agentsData, search, page]);
+    if (mode === "server" && pagedData?.mode === "page") {
+      return {
+        total: pagedData.total,
+        totalPages: totalPagesServer,
+        slice: pagedData.agents ?? [],
+      };
+    }
+    return prepareAgents(agentsData?.agents ?? [], search, page);
+  }, [mode, pagedData, agentsData, search, page, totalPagesServer]);
 
-  // ajusta page se totalPages diminuir
-  if (page > totalPages) setPage(totalPages);
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
+  const toast = useToast();
 
   const handleAgentCreated = (agentData: Partial<Agent>) => {
     toast.agents.createAgent();
     console.log("Agente criado:", agentData);
   };
+
+  const isLoading = mode === "server" ? isLoadingPage : isLoadingSnap;
+  const isError = mode === "server" ? isErrorPage : isErrorSnap;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10">

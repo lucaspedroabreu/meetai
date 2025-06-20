@@ -29,7 +29,7 @@ const AgentsGridContent = ({
 
   return (
     <AgentsGrid
-      agents={agentsData as Agent[]}
+      agents={agentsData?.agents ?? []}
       onCreateFirstAgent={onCreateFirstAgent}
       onRetry={onRetry}
     />

@@ -62,7 +62,8 @@ export function ProfilePage() {
   });
 
   // Hook para obter os agentes do usuário
-  const { data: agents = [] } = useMyAgents();
+  const { data: agentsData } = useMyAgents();
+  const agents = agentsData?.agents ?? [];
 
   useEffect(() => {
     loadUserData();
