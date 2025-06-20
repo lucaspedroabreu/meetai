@@ -61,8 +61,7 @@ export default function AgentsScreen() {
     mode === "server" ? { page, search: debouncedSearch } : undefined
   );
 
-  const agentsData =
-    mode === "server" ? pagedData?.agents : snapshotData?.agents;
+  const agentsData = mode === "server" ? pagedData : snapshotData;
   const totalPagesServer =
     mode === "server" && pagedData?.mode === "page" ? pagedData.totalPages : 1;
 
@@ -71,10 +70,10 @@ export default function AgentsScreen() {
       return {
         total: pagedData.total,
         totalPages: totalPagesServer,
-        slice: (pagedData.agents as Agent[]) ?? [],
+        slice: pagedData.agents ?? [],
       };
     }
-    return prepareAgents((agentsData as Agent[]) ?? [], search, page);
+    return prepareAgents(agentsData?.agents ?? [], search, page);
   }, [mode, pagedData, agentsData, search, page, totalPagesServer]);
 
   useEffect(() => {

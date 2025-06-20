@@ -23,7 +23,7 @@ const AgentsTableContent = ({ _onRetry }: AgentsTableContentProps) => {
     return null;
   }
 
-  return <AgentsTable agents={agentsData as Agent[]} />;
+  return <AgentsTable agents={agentsData?.agents ?? []} />;
 };
 
 const AgentsTableLoading = () => (
